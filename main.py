@@ -3,8 +3,7 @@ from crewai import Agent, Task, Crew, Process, LLM
 
 # 1. Configuration: Get your free API key from Google AI Studio
 # Set it in your environment or directly here for the prototype
-gemini_api_key = "AIzaSyDGfBXUsHtPJ4YAKxHe_h5j3HiKRATVOUc"
-
+gemini_api_key = os.getenv("GEMINI_API_KEY")
 
 # Define the model (Gemini 2.0 Flash is fast and free-tier friendly)
 # agent_llm = LLM(
