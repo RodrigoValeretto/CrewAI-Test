@@ -26,21 +26,6 @@ def load_assessment_data(filepath="assessment_data.json"):
         return None
 
 
-def write_output(value):
-    """Load assessment data from JSON file."""
-    now_str = datetime.now().strftime("%Y%m%d%H%M%S")
-    try:
-        with open(f"output_{now_str}.md", "w") as f:
-            return f.write(value)
-    except FileNotFoundError:
-        return None
-    except json.JSONDecodeError:
-        return None
-    except Exception as e:
-        print("Error writing value to output file:", e)
-        print("\n\nValue:\n", value)
-
-
 assessment_data = load_assessment_data()
 
 if assessment_data is None:
@@ -82,12 +67,15 @@ task2 = Task(
     description=task2_config["description"],
     agent=summarizer,
     expected_output=task2_config["expected_output"],
+    markdown=True,
+    output_file=f"./output/output_{datetime.now().strftime('%Y%m%d%H%M%S')}.md",
 )
 
 # 5. Kickoff the Crew
 crew = Crew(
-    agents=[data_reader, summarizer], tasks=[task1, task2], process=Process.sequential
+    agents=[data_reader, summarizer],
+    tasks=[task1, task2],
+    process=Process.sequential,
 )
 
 result = crew.kickoff()
-write_output(str(result))

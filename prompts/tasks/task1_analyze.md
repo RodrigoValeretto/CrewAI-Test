@@ -17,4 +17,4 @@ Responda em **português-brasileiro**.
 
 ## Expected Output
 
-Uma análise detalhada das informações contidas no arquivo de avaliação.
+Uma análise detalhada das informações contidas no arquivo de avaliação em um formato json que facilite o entendimento do próximo agente que usará esses dados para processamentos.
