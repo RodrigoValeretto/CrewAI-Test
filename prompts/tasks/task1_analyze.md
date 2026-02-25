@@ -13,8 +13,8 @@ Por favor, identifique e descreva:
 3. **Períodos de avaliação mencionados** - Quando essas avaliações ocorrem?
 4. **Qualquer outra informação relevante** - Dados adicionais que possam impactar a análise
 
-Responda em **português-brasileiro**.
+Responda em **português-brasileiro** e em formato **json**.
 
 ## Expected Output
 
-Uma análise detalhada das informações contidas no arquivo de avaliação em um formato json que facilite o entendimento do próximo agente que usará esses dados para processamentos.
+Uma análise detalhada das informações contidas na ficha de avaliação em português brasileiro e em um formato json que facilite o entendimento do próximo agente que usará esses dados para processamentos de insights.
