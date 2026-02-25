@@ -1,37 +1,36 @@
-# Task 2: Summarize Critical Points
+# Task 2: Summarize Strategic Insights (Ficha de Avaliação)
 
 ## Description
 
-Com base na análise anterior do arquivo de avaliação, resuma os pontos-chave que devem receber atenção especial durante a avaliação.
+Com base no mapeamento técnico realizado na análise anterior, sua tarefa é traduzir esses dados em um **Relatório Estratégico de Avaliação** para consumo humano. O foco deve ser a orientação do coordenador do programa sobre como os critérios da ficha impactam a nota final no sistema CAPES.
 
-Forneça:
+Você deve sintetizar:
 
-1. **Um parágrafo resumido** - Síntese clara dos achados principais
-2. **Uma lista de tópicos** - Pontos críticos em formato de lista com bullet points
+1. **Visão Macro:** O que a área de conhecimento (ex: Computação, Artes, etc.) está priorizando neste quadriênio?
+2. **Gargalos de Nota:** Quais critérios são os maiores "detratores" de nota se não forem atendidos?
+3. **Alvos de Excelência:** O que o programa precisa demonstrar para atingir os níveis 6 e 7 (internacionalização, impacto, etc.)?
 
-Responda em **português-brasileiro** e em **markdown**.
+A linguagem deve ser executiva, técnica (usando termos da CAPES/Sucupira) e extremamente organizada em Markdown.
 
-## Expected Output
+## Expected Output Format
 
-Um resumo em parágrafo e uma lista de tópicos com os pontos críticos da avaliação em uma estrutura de markdown bem formatada como segue:
+### 🎯 Resumo Executivo
 
-    # Expected Output Format for Task 2
+[Um parágrafo de 3 a 4 frases que sintetiza a filosofia de avaliação da área e o nível de exigência esperado para o quadriênio vigente.]
 
-    ## Example Structure
+### ⚠️ Pontos Críticos para Atenção (Gargalos)
 
-    ### Resumo Geral
+- **[Nome do Quesito/Item]**: Explique por que este ponto é um risco e qual a métrica mínima esperada (ex: índice de publicações por docente permanente).
+- **[Nome do Quesito/Item]**: Descrição da vulnerabilidade e impacto na nota.
+- **[Nome do Quesito/Item]**: Descrição da vulnerabilidade e impacto na nota.
 
-    Parágrafo contendo uma síntese clara e concisa dos pontos mais críticos da avaliação. Este parágrafo deve capturar a essência dos achados principais em 3-4 frases bem estruturadas.
+### 🚀 Diferenciais de Excelência (Notas 6 e 7)
 
-    ### Pontos Críticos para Atenção
+- **Critério de Impacto**: O que a ficha define como "Inserção Social" ou "Internacionalização" de alto nível.
+- **Liderança da Área**: Menção a prêmios, convênios ou visibilidade internacional citada na ficha.
 
-    - **Ponto crítico 1**: Descrição do problema e por que requer atenção
-    - **Ponto crítico 2**: Descrição do problema e por que requer atenção  
-    - **Ponto crítico 3**: Descrição do problema e por que requer atenção
-    - **Ponto crítico N**: Descrição do problema e por que requer atenção
+### 📋 Matriz de Prioridade Recomendada
 
-    ### Prioridades Recomendadas
-
-    1. Prioridade Alta: [descrição]
-    2. Prioridade Média: [descrição]
-    3. Prioridade Baixa: [descrição]
+1. **Prioridade Alta (Imediata):** [Ação ou indicador que deve ser validado agora nas visualizações do APOEMA para evitar rebaixamento].
+2. **Prioridade Média (Estrutural):** [Melhorias de médio prazo no corpo docente ou discente].
+3. **Prioridade Baixa (Manutenção):** [Itens de acompanhamento contínuo que já estão em conformidade].

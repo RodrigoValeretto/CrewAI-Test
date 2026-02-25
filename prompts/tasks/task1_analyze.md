@@ -1,20 +1,25 @@
-# Task 1: Analyze Assessment Data
+# Task 1: Analyze Assessment Data (Ficha de Avaliação)
 
 ## Description
 
-Analise o seguinte arquivo JSON de avaliação de pós-graduação e extraia as informações principais:
+Realize uma análise técnica e estrutural do conteúdo extraído da ficha de avaliação da CAPES fornecida no campo `{ASSESSMENT_DATA}`. O objetivo é transformar a transcrição bruta em um esquema lógico de critérios de avaliação.
 
-{ASSESSMENT_DATA}
+Você deve identificar e mapear obrigatoriamente:
 
-Por favor, identifique e descreva:
+1. **Metadados da Ficha:** Área de avaliação (ex: Interdisciplinar, Medicina), Quadriênio e data de publicação.
+2. **Taxonomia da Avaliação:** Mapeie a hierarquia de Quesitos, Itens e Indicadores.
+3. **Métricas de Desempenho:** Extraia quais são os indicadores quantitativos (ex: N de publicações por docente) e qualitativos (ex: impacto social) exigidos.
+4. **Réguas de Nota:** Identifique os critérios que diferenciam um programa "Bom" (Nota 4) de um programa de "Excelência" (Notas 6 e 7).
+5. **Vínculo com o APOEMA:** Identifique quais desses critérios podem ser representados por dados de produção, corpo docente ou discente (que são os dados que o APOEMA agrega).
 
-1. **Estrutura geral do documento** - Como os dados estão organizados?
-2. **Principais categorias ou critérios de avaliação** - Quais são os critérios definidos?
-3. **Períodos de avaliação mencionados** - Quando essas avaliações ocorrem?
-4. **Qualquer outra informação relevante** - Dados adicionais que possam impactar a análise
-
-Responda em **português-brasileiro** e em formato **json**.
+A resposta deve ser rigorosamente em **português-brasileiro** e formatada como um objeto **JSON** puro, sem textos explicativos fora do bloco de código.
 
 ## Expected Output
 
-Uma análise detalhada das informações contidas na ficha de avaliação em português brasileiro e em um formato json que facilite o entendimento do próximo agente que usará esses dados para processamentos de insights.
+Um objeto JSON estruturado que funcione como um "Mapa de Calor de Importância", contendo:
+
+- `area_conhecimento`: Nome da área.
+- `quadrienio`: Período de referência.
+- `estrutura_quesitos`: Array de objetos contendo `nome_quesito`, `peso_relativo` e `indicadores_chave`.
+- `criterios_sucesso`: Descrição do que é necessário para atingir notas superiores.
+- `mapeamento_apoema`: Sugestões de quais tipos de dados (Produção, Egressos, Docentes) devem ser cruzados com esta ficha.
