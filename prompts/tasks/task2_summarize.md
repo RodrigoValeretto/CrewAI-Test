@@ -12,8 +12,11 @@ Você deve sintetizar:
 
 A linguagem deve ser executiva, técnica (usando termos da CAPES/Sucupira) e extremamente organizada em Markdown.
 
-## Expected Output Format
+## Expected Output
 
+O output esperado corresponde a um markdown como no exemplo abaixo.
+
+```md
 ### 🎯 Resumo Executivo
 
 [Um parágrafo de 3 a 4 frases que sintetiza a filosofia de avaliação da área e o nível de exigência esperado para o quadriênio vigente.]
@@ -34,3 +37,4 @@ A linguagem deve ser executiva, técnica (usando termos da CAPES/Sucupira) e ext
 1. **Prioridade Alta (Imediata):** [Ação ou indicador que deve ser validado agora nas visualizações do APOEMA para evitar rebaixamento].
 2. **Prioridade Média (Estrutural):** [Melhorias de médio prazo no corpo docente ou discente].
 3. **Prioridade Baixa (Manutenção):** [Itens de acompanhamento contínuo que já estão em conformidade].
+```
