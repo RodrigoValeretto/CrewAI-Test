@@ -2,7 +2,7 @@ import os
 import json
 import sys
 from crewai import Agent, Task, Crew, Process, LLM
-from crewai_files import FileType
+from crewai_files import PDFFile
 from datetime import datetime
 from prompt_loader import load_agent_prompt, load_task_prompt
 
@@ -97,7 +97,7 @@ agents = [data_reader, summarizer]
 
 if pdf_path and os.path.exists(pdf_path):
     print(f"\n✓ Arquivo PDF carregado: {os.path.basename(pdf_path)}")
-    
+
     # Task 3: Extract plots from PDF
     task3_config = load_task_prompt("task3_extract_plots")
     task3 = Task(
@@ -105,10 +105,10 @@ if pdf_path and os.path.exists(pdf_path):
         agent=report_analyzer,
         expected_output=task3_config["expected_output"],
         input_files={
-            "pdf_report": FileType(source=pdf_path),
-        }
+            "pdf_report": PDFFile(source=pdf_path),
+        },
     )
-    
+
     # Task 4: Analyze extracted plots
     task4_config = load_task_prompt("task4_analyze_plots")
     task4 = Task(
@@ -116,7 +116,7 @@ if pdf_path and os.path.exists(pdf_path):
         agent=report_analyzer,
         expected_output=task4_config["expected_output"],
     )
-    
+
     # Task 5: Map visualizations to CAPES criteria
     task5_config = load_task_prompt("task5_criteria_mapping")
     task5 = Task(
@@ -126,7 +126,7 @@ if pdf_path and os.path.exists(pdf_path):
         markdown=True,
         output_file=f"./output/conformance_report_{datetime.now().strftime('%Y%m%d%H%M%S')}.md",
     )
-    
+
     tasks.extend([task3, task4, task5])
     agents.append(report_analyzer)
     print("✓ Tarefas de análise de relatório adicionadas ao pipeline\n")
@@ -145,6 +145,6 @@ crew = Crew(
 )
 
 result = crew.kickoff()
-print("\n" + "="*80)
+print("\n" + "=" * 80)
 print("EXECUÇÃO CONCLUÍDA")
-print("="*80)
+print("=" * 80)
