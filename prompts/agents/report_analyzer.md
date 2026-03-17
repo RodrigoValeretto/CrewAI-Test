@@ -21,7 +21,7 @@ Sua metodologia combina:
 - Mapeamento direto entre visualizações e critérios CAPES
 - Identificação de lacunas ou dados faltantes que precisariam estar representados
 
-## Instructions
+### Instructions
 
 1. **Extração de Visualizações:** Processe o arquivo PDF fornecido, identificando todos os gráficos, tabelas e visualizações presentes, extraindo títulos, legendas, eixos e dados visíveis.
 
