@@ -1,6 +1,7 @@
 import os
 import json
 import sys
+import argparse
 from crewai import Agent, Task, Crew, Process, LLM
 from crewai_files import PDFFile
 from datetime import datetime
@@ -30,19 +31,31 @@ def load_assessment_data(filepath="assessment_data.json"):
 
 def parse_arguments():
     """Parse command line arguments."""
-    assessment_file = "assessment_data.json"
-    pdf_path = None
+    parser = argparse.ArgumentParser(description="Run APOEMA assessment analysis")
+    parser.add_argument(
+        "--assessment-file",
+        type=str,
+        default="assessment_data.json",
+        help="Path to the assessment data JSON file (default: assessment_data.json)",
+    )
+    parser.add_argument(
+        "--pdf-file",
+        type=str,
+        default=None,
+        help="Path to the PDF report file (optional)",
+    )
+    parser.add_argument(
+        "--prefix",
+        type=str,
+        default=datetime.now().strftime("%Y%m%d%H%M%S"),
+        help="Prefix for output files (default: timestamp of execution)",
+    )
 
-    if len(sys.argv) > 1:
-        assessment_file = sys.argv[1]
-
-    if len(sys.argv) > 2:
-        pdf_path = sys.argv[2]
-
-    return assessment_file, pdf_path
+    args = parser.parse_args()
+    return args.assessment_file, args.pdf_path, args.prefix
 
 
-assessment_file, pdf_path = parse_arguments()
+assessment_file, pdf_path, output_prefix = parse_arguments()
 assessment_data = load_assessment_data(assessment_file)
 
 if assessment_data is None:
@@ -103,7 +116,7 @@ task2 = Task(
     agent=summarizer,
     expected_output=task2_config["expected_output"],
     markdown=True,
-    output_file=f"./output/output_{datetime.now().strftime('%Y%m%d%H%M%S')}.md",
+    output_file=f"./output/{output_prefix}_output.md",
 )
 
 # 5. Optional Tasks 3-5: Report Analysis (requires PDF file)
@@ -139,7 +152,7 @@ if pdf_path and os.path.exists(pdf_path):
         agent=report_analyzer,
         expected_output=task5_config["expected_output"],
         markdown=True,
-        output_file=f"./output/conformance_report_{datetime.now().strftime('%Y%m%d%H%M%S')}.md",
+        output_file=f"./output/{output_prefix}_conformance_report.md",
     )
 
     # Task 6: Assess utility and assertiveness of graphics for the area
@@ -149,7 +162,7 @@ if pdf_path and os.path.exists(pdf_path):
         agent=utility_assessor,
         expected_output=task6_config["expected_output"],
         markdown=True,
-        output_file=f"./output/utility_assessment_{datetime.now().strftime('%Y%m%d%H%M%S')}.md",
+        output_file=f"./output/{output_prefix}_utility_assessment.md",
     )
 
     tasks.extend([task3, task4, task5, task6])
@@ -159,8 +172,13 @@ else:
     if pdf_path:
         print(f"⚠ Arquivo PDF não encontrado: {pdf_path}")
     print("\n💡 Dica: Execute com um arquivo PDF para análise de relatórios")
-    print("   Uso: python main.py <arquivo_assessment.json> <caminho_do_pdf>")
-    print("   Uso (apenas assessment): python main.py <arquivo_assessment.json>")
+    print(
+        "   Uso: python main.py --assessment-file <arquivo.json> --pdf-file <arquivo.pdf>"
+    )
+    print("   Uso (apenas assessment): python main.py --assessment-file <arquivo.json>")
+    print(
+        "   Uso (com prefixo customizado): python main.py --assessment-file <arquivo.json> --prefix my_run"
+    )
     print("\nExecutando apenas tarefas 1 e 2...\n")
 
 # 6. Kickoff the Crew
