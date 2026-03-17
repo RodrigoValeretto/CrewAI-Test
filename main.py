@@ -30,16 +30,23 @@ def load_assessment_data(filepath="assessment_data.json"):
 
 def parse_arguments():
     """Parse command line arguments."""
+    assessment_file = "assessment_data.json"
+    pdf_path = None
+    
     if len(sys.argv) > 1:
-        pdf_path = sys.argv[1]
-        return pdf_path
-    return None
+        assessment_file = sys.argv[1]
+    
+    if len(sys.argv) > 2:
+        pdf_path = sys.argv[2]
+    
+    return assessment_file, pdf_path
 
 
-assessment_data = load_assessment_data()
+assessment_file, pdf_path = parse_arguments()
+assessment_data = load_assessment_data(assessment_file)
 
 if assessment_data is None:
-    print("Erro: Não foi possível carregar o arquivo assessment_data.json")
+    print(f"Erro: Não foi possível carregar o arquivo {assessment_file}")
     exit(1)
 
 # Convert assessment data to string for agent processing
@@ -134,7 +141,8 @@ else:
     if pdf_path:
         print(f"⚠ Arquivo PDF não encontrado: {pdf_path}")
     print("\n💡 Dica: Execute com um arquivo PDF para análise de relatórios")
-    print("   Uso: python main.py <caminho_do_pdf>")
+    print("   Uso: python main.py <arquivo_assessment.json> <caminho_do_pdf>")
+    print("   Uso (apenas assessment): python main.py <arquivo_assessment.json>")
     print("\nExecutando apenas tarefas 1 e 2...\n")
 
 # 6. Kickoff the Crew
