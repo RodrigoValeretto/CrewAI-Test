@@ -94,4 +94,4 @@ Um objeto JSON com a conformidade e um relatório markdown estruturado:
 
 Adicionalmente, gere um relatório markdown (`criterios_conformance_report.md`) que traduza o JSON anterior em um documento legível para stakeholders, com seções claras de achados, recomendações e próximos passos.
 
-Retorne APENAS o markdown detalhado.
+Retorne APENAS o markdown detalhado diretamente.

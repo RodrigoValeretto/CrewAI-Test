@@ -32,13 +32,13 @@ def parse_arguments():
     """Parse command line arguments."""
     assessment_file = "assessment_data.json"
     pdf_path = None
-    
+
     if len(sys.argv) > 1:
         assessment_file = sys.argv[1]
-    
+
     if len(sys.argv) > 2:
         pdf_path = sys.argv[2]
-    
+
     return assessment_file, pdf_path
 
 
@@ -107,7 +107,6 @@ task2 = Task(
 )
 
 # 5. Optional Tasks 3-5: Report Analysis (requires PDF file)
-pdf_path = parse_arguments()
 tasks = [task1, task2]
 agents = [data_reader, summarizer]
 
