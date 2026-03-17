@@ -80,6 +80,15 @@ report_analyzer = Agent(
     verbose=True,
 )
 
+utility_assessor_config = load_agent_prompt("utility_assessor")
+utility_assessor = Agent(
+    role=utility_assessor_config["Role"],
+    goal=utility_assessor_config["Goal"],
+    backstory=utility_assessor_config["Backstory"],
+    llm=agent_llm,
+    verbose=True,
+)
+
 # 4. Define Tasks
 task1_config = load_task_prompt("task1_analyze", assessment_data_str)
 task1 = Task(
@@ -134,8 +143,18 @@ if pdf_path and os.path.exists(pdf_path):
         output_file=f"./output/conformance_report_{datetime.now().strftime('%Y%m%d%H%M%S')}.md",
     )
 
-    tasks.extend([task3, task4, task5])
-    agents.append(report_analyzer)
+    # Task 6: Assess utility and assertiveness of graphics for the area
+    task6_config = load_task_prompt("task6_utility_assessment")
+    task6 = Task(
+        description=task6_config["description"],
+        agent=utility_assessor,
+        expected_output=task6_config["expected_output"],
+        markdown=True,
+        output_file=f"./output/utility_assessment_{datetime.now().strftime('%Y%m%d%H%M%S')}.md",
+    )
+
+    tasks.extend([task3, task4, task5, task6])
+    agents.append(utility_assessor)
     print("✓ Tarefas de análise de relatório adicionadas ao pipeline\n")
 else:
     if pdf_path:
