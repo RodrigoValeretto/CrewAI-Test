@@ -1,91 +1,49 @@
-# Task 6: Assess APOEMA Graphics Utility and Assertiveness for Academic Area
+# Task 6: Assess APOEMA Graphics Utility and Assertiveness
 
 ## Description
 
-Com base nas análises anteriores (critérios CAPES, gráficos extraídos, mapeamento de conformidade) e nos relatórios gerados, realize uma avaliação crítica sobre a **utilidade e assertividade** das visualizações do APOEMA especificamente para a área de avaliação em questão.
-
-Este é um passo de análise de valor prático, diferente da conformidade técnica. Você deve responder perguntas como:
-
-- Os gráficos realmente servem aos objetivos desta área?
-- As visualizações ajudam os avaliadores CAPES a entender o programa?
-- Faltam visualizações críticas para contar a história desta área?
-- Existem gráficos que são enganosos ou irrelevantes para o contexto?
-- Como as visualizações se comparam com o que seria esperado em um dashboard ideal para esta área?
-
-Para cada visualização identificada nos passos anteriores, você deve:
-
-1. **Mapeamento Temático:**
-   - Qual é o tema/tópico do gráfico?
-   - Este tema é crítico, importante, ou marginal para a área?
-   - Os avaliadores CAPES esperariam ver este tópico representado?
-
-2. **Avaliação de Utilidade:**
-   - O gráfico fornece insights que ajudam na decisão?
-   - A visualização é clara e inteligível?
-   - Há dados melhores ou diferentes que seriam mais úteis?
-   - Como este gráfico se insere na narrativa geral?
-
-3. **Score de Assertividade (1-10):**
-   - Considere relevância, clareza, completude, aplicabilidade prática
-   - Justifique o score com referências específicas
-
-4. **Análise de Lacunas:**
-   - Quais gráficos estão faltando para uma apresentação completa?
-   - Qual seria a visualização ideal que não existe?
-   - Como estas lacunas afetam a capacidade de demonstração de conformidade?
-
-5. **Recomendações Executivas:**
-   - Quais gráficos manter, quais substituir, quais adicionar?
-   - Qual é a prioridade destas mudanças?
-   - Como isto impactaria a apresentação da área aos avaliadores?
+1. **Avaliação Crítica de Pertinência:** Utilize os outputs de conformidade e as análises técnicas anteriores para determinar a utilidade prática do dashboard do APOEMA para a área de conhecimento específica. O foco aqui não é se o gráfico está correto, mas se ele **agrega valor estratégico** para o coordenador do PPG e para o avaliador da CAPES.
+2. **Conflito de Domínio:** Identifique explicitamente se a natureza original do APOEMA (focada em Computação) está enviesando ou prejudicando a narrativa da área atual (ex: Artes, Saúde, Humanas).
+3. **Julgamento de Valor (Score de Assertividade):** Atribua uma nota de 1 a 10 para cada visualização, fundamentada na tríade: Relevância Temática, Clareza e Poder de Decisão.
+4. **Mapeamento de Lacunas Estratégicas:** Identifique "o que não está lá". Aponte quais visualizações seriam vitais para essa área específica (ex: um mapa de rede de colaboração internacional ou um gráfico de impacto social/bibliométrico específico) que o APOEMA ainda não oferece.
+5. **Síntese Direta:** Consolide as recomendações de forma sucinta, focando em "Manter", "Adaptar" ou "Substituir", para facilitar a leitura rápida de stakeholders.
 
 ## Expected Output
 
-Um relatório markdown estruturado com as seguintes seções:
+Um relatório executivo em Markdown (`utilidade_assertividade_report.md`), extremamente direto e focado em insights acionáveis, seguindo a estrutura:
 
-```
-# Relatório de Assertividade dos Gráficos APOEMA
+# 📊 Relatório de Assertividade: APOEMA vs. Área [NOME DA ÁREA]
 
-## Resumo Executivo
-- Score geral de assertividade (0-100%)
-- Principais conclusões sobre utilidade das visualizações
-- Recomendações prioritárias (em ordem de importância)
+## ⚡ Resumo Executivo
 
-## 1. Avaliação Individual de Gráficos
-Para cada gráfico identificado:
-- Título e descrição
-- Score de assertividade (1-10) com justificativa
-- Categoria: Essencial | Útil | Aceitável | Marginal | Irrelevante
-- Público-alvo: Quem se beneficia deste gráfico?
-- Sugestões de melhoria
+* **Score Geral de Assertividade:** [0-100%]
+* **Veredito:** [Curta frase sobre a utilidade do dashboard para a área].
+* **Top 3 Recomendações:** [Lista prioritária de mudanças].
 
-## 2. Matriz de Utilidade
-Tabela mostrando:
-- Lista de gráficos
-- Relevância para a área (Alta/Média/Baixa)
-- Clareza da visualização (Alta/Média/Baixa)
-- Utilidade prática (Alta/Média/Baixa)
-- Score assertividade (1-10)
-- Recomendação (Manter/Melhorar/Substituir/Remover)
+## 1. Avaliação de Utilidade por Gráfico
 
-## 3. Análise de Lacunas
-- Gráficos que deveriam existir mas não existem
-- Tópicos não cobertos visualmente
-- Narrativas incompletas
-- Prioridade de preenchimento
+| ID | Título | Score (1-10) | Categoria | Recomendação |
+|:---|:---|:---:|:---|:---|
+| 001 | [Título] | [Nota] | [Essencial...Irrelevante] | [Manter/Melhorar/Remover] |
 
-## 4. Contexto Específico da Área
-- Características da área que influenciam utilidade
-- Expectativas de avaliadores CAPES para esta área
-- Benchmarks com áreas similares (se aplicável)
+* *Justificativa sucinta para cada score abaixo da tabela, focando no porquê da nota.*
 
-## 5. Recomendações Prioritárias
-Lista ordenada de ações:
-1. [Ação 1] - Impacto: Alto/Médio/Baixo - Esforço: Alto/Médio/Baixo
-2. [Ação 2] - ...
+## 2. Lacunas de Visualização (Gap Analysis)
 
-## 6. Conclusão
-Parecer executivo sobre se o APOEMA está produzindo visualizações úteis e assertivas para esta área, e qual é o nível de melhoria necessário.
-```
+* **Métrica Ausente:** [O que falta] | **Impacto:** [Por que faz falta na avaliação CAPES].
+* **Narrativa Incompleta:** [Qual parte da ficha de avaliação ficou sem evidência visual].
 
-Retorne APENAS o relatório markdown detalhado, sem JSON adicional.
+## 3. Contexto da Área vs. DNA do APOEMA
+
+* [Parágrafo direto explicando se as premissas da Computação atendem ou falham nesta área específica].
+
+## 4. Plano de Ação (Prioridades)
+
+1. **[Ação]** - Impacto: [Alto/Médio] - Esforço: [Alto/Médio].
+2. **[Ação]** - ...
+
+## 5. Conclusão Executiva
+
+[Parecer final sobre a viabilidade do uso do APOEMA nesta área e nível de adaptação necessário].
+
+**Instrução de Formato:** Retorne APENAS o relatório em Markdown. Não inclua introduções, conclusões externas ao documento ou blocos de código JSON.

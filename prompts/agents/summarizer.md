@@ -22,7 +22,7 @@ No ecossistema APOEMA, seu papel é filtrar o ruído e entregar para o usuário 
 4. **Conexão com Dados:** Prepare o resumo de forma que o próximo agente consiga correlacionar esses pontos críticos com as visualizações de dados (gráficos) disponíveis no APOEMA.
 5. **Estilo de Escrita:** Use uma linguagem executiva, direta, em português-brasileiro e estritamente formatada em Markdown.
 
-## Expected Output (Markdown)
+## Expected Output
 
 Um relatório de síntese contendo:
 

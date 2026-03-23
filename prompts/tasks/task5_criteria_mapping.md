@@ -2,96 +2,39 @@
 
 ## Description
 
-Utilizando os critérios de avaliação CAPES extraídos anteriormente e as análises de gráficos geradas, realize o mapeamento entre visualizações e critérios, gerando um relatório de conformidade. Este é o passo de integração entre as três perspectivas: critérios de avaliação, visualizações de dados e insights extraídos.
-
-Para cada visualização, você deve:
-
-1. **Mapeamento de Critérios:**
-   - Identifique qual(is) quesito(s) CAPES a visualização endereça
-   - Mapeie para qual(is) indicador(es) específico(s)
-   - Determine o nível de alinhamento (alinhado|parcialmente alinhado|desalinhado)
-   - Justifique o mapeamento com referências aos critérios
-
-2. **Avaliação de Cobertura:**
-   - A visualização fornece dados suficientes para avaliar o critério?
-   - Há dados faltantes necessários para uma avaliação completa?
-   - A granularidade dos dados é apropriada para o nível de detalhe do critério?
-
-3. **Análise de Validação:**
-   - Os dados mostrados confirmam conformidade com o critério CAPES?
-   - Há sinais de não-conformidade?
-   - Qual é o risco de avaliação negativa baseado nos dados?
-
-4. **Síntese de Conformidade:**
-   - Crie uma matriz mostrando quais critérios CAPES estão cobertos por visualizações
-   - Identifique lacunas na cobertura (critérios que deveriam ter visualizações)
-   - Produza um score de conformidade geral
-
-Use as informações de critérios fornecidas com referência à estrutura de quesitos, pesos e indicadores.
+1. **Integração de Perspectivas:** Utilize os critérios extraídos da Ficha de Avaliação (Data Reader) e as análises das visualizações (Report Analyzer) para realizar o cruzamento final de conformidade.
+2. **Mapeamento de Critérios:** Para cada gráfico do APOEMA, identifique qual Quesito e Indicador específico da CAPES ele endereça. Determine se o alinhamento é total, parcial ou se há um desalinhamento (ex: o gráfico mostra dados que a ficha não considera mais relevantes).
+3. **Auditoria de Cobertura e Suficiência:** Avalie se as visualizações presentes são suficientes para que um avaliador atribua uma nota ao programa. Identifique "zonas de sombra" (critérios de alto peso na ficha que não possuem representação visual no APOEMA).
+4. **Cálculo de Risco:** Baseado na tendência dos dados (Task 4), determine o risco de uma avaliação negativa (Baixo, Médio, Alto) para cada quesito da ficha.
+5. **Síntese de Conformidade:** Gere um diagnóstico que aponte a taxa de cobertura do dashboard em relação às exigências da Grande Área (ex: Computação, Sociologia).
+6. **Redação do Relatório Final:** Traduza toda a inteligência técnica processada em um relatório executivo formatado em Markdown, focado na tomada de decisão do Coordenador do PPG.
 
 ## Expected Output
 
-Um objeto JSON com a conformidade e um relatório markdown estruturado:
+Um relatório detalhado em Markdown (`criterios_conformance_report.md`), estruturado profissionalmente, contendo:
 
-```json
-{
-  "mapeamento_visualizacoes_criterios": [
-    {
-      "id_grafico": "grafico_001",
-      "titulo_original": "...",
-      "quesitos_associados": [
-        {
-          "nome_quesito": "...",
-          "peso": "X%",
-          "alinhamento": "alinhado|parcialmente|desalinhado",
-          "justificativa": "...",
-          "indicadores_cobertos": [
-            {
-              "nome_indicador": "...",
-              "tipo_avaliacao": "qualitativa|quantitativa",
-              "conformidade": "sim|parcial|nao",
-              "evidencia": "..."
-            }
-          ]
-        }
-      ],
-      "cobertura": {
-        "dados_suficientes": true|false,
-        "granularidade": "adequada|superficial|excessiva",
-        "lacunas_identificadas": ["lacuna 1", ...],
-        "recomendacoes": ["recomendacao 1", ...]
-      },
-      "validacao": {
-        "indica_conformidade": true|false,
-        "nivel_risco": "baixo|medio|alto",
-        "diagnostico": "..."
-      }
-    }
-  ],
-  "matriz_conformidade": {
-    "criterios_cobertos": N,
-    "criterios_total": N,
-    "taxa_cobertura_percentual": X,
-    "quesitos": [
-      {
-        "nome": "...",
-        "peso": "X%",
-        "visualizacoes_associadas": ["id1", "id2"],
-        "conformidade_estimada": "alta|media|baixa",
-        "lacunas": ["lacuna 1", ...]
-      }
-    ]
-  },
-  "sintese_executiva": {
-    "score_conformidade_geral": 0-100,
-    "principais_forcas": ["forca 1", ...],
-    "principais_lacunas": ["lacuna 1", ...],
-    "recomendacoes_prioritarias": ["rec 1", ...],
-    "conclusao": "..."
-  }
-}
-```
+### 📊 Diagnóstico de Conformidade CAPES
 
-Adicionalmente, gere um relatório markdown (`criterios_conformance_report.md`) que traduza o JSON anterior em um documento legível para stakeholders, com seções claras de achados, recomendações e próximos passos.
+- **Resumo Executivo:** Análise da maturidade dos dados do programa frente à ficha de avaliação da área.
+- **Score Geral de Aderência:** Um percentual (0-100%) que represente o quanto as visualizações atuais cobrem as necessidades da ficha.
 
-Retorne APENAS o relatório em markdown detalhado sem JSON.
+### 🔍 Análise por Quesito de Avaliação
+
+- **[Nome do Quesito - Peso X%]**:
+  - **Visualizações Associadas:** IDs dos gráficos que sustentam este quesito.
+  - **Status de Evidência:** (Suficiente / Insuficiente / Ausente).
+  - **Análise de Risco:** Diagnóstico se os dados atuais sugerem conformidade ou risco de nota baixa.
+
+### ⚠️ Lacunas de Evidência (Gap Analysis)
+
+- Lista de critérios da ficha de avaliação que **não** possuem representação visual no APOEMA, com recomendação do que deveria ser plotado.
+
+### 📈 Matriz de Relevância vs. Utilidade
+
+- Uma tabela cruzando os critérios da ficha com os gráficos existentes, avaliando a utilidade de cada um para a área específica (ex: justificando por que um gráfico de 'Produção Técnica' é mais útil para as Engenharias que para as Humanidades).
+
+### 🚀 Recomendações Estratégicas
+
+- Lista de ações prioritárias para melhorar a defesa do programa perante a CAPES.
+
+**Instrução de Formato:** Retorne APENAS o relatório em Markdown detalhado. Não inclua blocos de código JSON ou explicações fora do documento de auditoria.
