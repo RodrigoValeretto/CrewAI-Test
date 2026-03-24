@@ -2,85 +2,64 @@
 
 ## Description
 
-Baseado no catálogo de visualizações extraído na tarefa anterior, realize uma análise profunda de cada gráfico para gerar insights significativos e validação de dados. Para cada visualização:
-
-1. **Análise de Dados:**
-   - Identifique a tendência ou padrão principal (crescimento, declínio, estabilidade, ciclos)
-   - Calcule ou estime mudanças percentuais, taxas de crescimento ou variações
-   - Identifique outliers ou valores anormais
-   - Determine correlações ou relacionamentos entre séries (se múltiplas)
-
-2. **Validação de Qualidade:**
-   - Verifique se há valores faltantes ou inconsistências nos dados
-   - Avalie se a escala do gráfico representa adequadamente os dados
-   - Identifique se há distorções visuais intencionais ou não
-
-3. **Contexto e Significado:**
-   - O que este gráfico está comunicando sobre o programa?
-   - Quais são as implicações dos dados mostrados?
-   - Qual é a narrativa que o gráfico constrói?
-
-4. **Insights Acionáveis:**
-   - Quais são os principais achados?
-   - Há razões de preocupação ou pontos positivos?
-   - Quais são as áreas que requerem atenção ou celebração?
-
-Considere que estes dados serão avaliados sob a perspectiva dos critérios CAPES de avaliação de pós-graduação.
+1. **Interpretação de Tendências:** Utilize o catálogo JSON gerado na tarefa anterior para realizar uma análise estatística e qualitativa de cada visualização. Identifique padrões de comportamento dos dados (crescimento, estagnação, declínio ou ciclicidade).
+2. **Cálculos de Desempenho:** Estime variações percentuais entre períodos e identifique discrepâncias (outliers) que possam indicar erros de lançamento no Sucupira ou eventos extraordinários no PPG.
+3. **Análise de Narrativa Acadêmica:** Determine qual "história" o gráfico conta. (Ex: O gráfico de egressos mostra uma inserção social crescente ou apenas um acúmulo de titulações sem destino claro?).
+4. **Validação Técnica e de Rigor:** Avalie se a escala e o tipo de gráfico escolhido pelo APOEMA são honestos e eficazes para representar o fenômeno acadêmico em questão.
+5. **Geração de Insights Acionáveis:** Extraia conclusões que permitam ao coordenador do curso agir. Diferencie pontos de celebração (ex: alcance de metas de internacionalização) de áreas de risco iminente.
+6. **Alinhamento CAPES:** Prepare a análise para que ela possa ser cruzada com os critérios da ficha de avaliação da área específica.
 
 ## Expected Output
 
-Um objeto JSON contendo análises estruturadas:
+Um objeto JSON puro, sem textos introdutórios ou conclusivos, seguindo estritamente a estrutura abaixo para cada visualização analisada:
 
 ```json
 {
   "analises_detalhadas": [
     {
-      "id_grafico": "grafico_001",
-      "titulo_original": "...",
-      "analise_dados": {
+      "id_grafico": "string",
+      "titulo_original": "string",
+      "analise_estatistica": {
         "tendencia_principal": "crescimento|declinio|estabilidade|ciclico|misto",
-        "descricao_tendencia": "...",
-        "valores_chave": {
-          "minimo": value,
-          "maximo": value,
-          "media": value,
-          "tendencia_percentual": "X% ao longo do período"
+        "descricao_comportamento": "string",
+        "metricas_estimadas": {
+          "minimo": "number/string",
+          "maximo": "number/string",
+          "media_periodo": "number/string",
+          "variacao_percentual": "string"
         },
-        "outliers_detectados": ["descrição de outlier 1", ...],
-        "comparacoes_entre_series": "..."
+        "outliers_identificados": ["string"],
+        "correlacoes_observadas": "string"
       },
-      "validacao": {
-        "dados_incompletos": true|false,
-        "descricao_lacunas": "...",
-        "inconsistencias": [],
-        "qualidade_geral": "alta|media|baixa",
-        "recomendacoes_melhoria": ["...", "..."]
+      "auditoria_qualidade": {
+        "dados_incompletos": "boolean",
+        "descricao_lacunas": "string",
+        "integridade_escala": "alta|media|baixa",
+        "recomendacoes_tecnicas": ["string"]
       },
-      "contexto": {
-        "o_que_comunica": "...",
-        "implicacoes": "...",
-        "narrativa": "..."
+      "narrativa_e_contexto": {
+        "mensagem_central": "string",
+        "implicacoes_academicas": "string",
+        "forca_da_evidencia": "alta|media|baixa"
       },
-      "insights": {
-        "achados_principais": ["insight 1", "insight 2", ...],
-        "pontos_positivos": ["ponto 1", ...],
-        "areas_preocupacao": ["area 1", ...],
-        "areas_celebracao": ["area 1", ...]
+      "insights_estrategicos": {
+        "achados_chave": ["string"],
+        "pontos_fortes": ["string"],
+        "riscos_detectados": ["string"],
+        "oportunidades_melhoria": ["string"]
       },
-      "recomendacoes": [
+      "proximos_passos": [
         {
-          "tipo": "melhoria|investigacao|acao",
-          "descricao": "..."
+          "categoria": "melhoria|investigacao|acao",
+          "prioridade": "alta|media|baixa",
+          "descricao": "string"
         }
       ]
     }
   ],
-  "sintese_geral": {
-    "padroes_globais": "...",
-    "coerencia_narrativa": "...",
-    "forca_evidencial": "alta|media|baixa"
+  "diagnostico_global": {
+    "coerencia_do_relatorio": "string",
+    "resumo_desempenho_geral": "string",
+    "alinhamento_esperado_capes": "string"
   }
 }
-```
-
-Retorne APENAS o objeto JSON estruturado, sem explicações adicionais.

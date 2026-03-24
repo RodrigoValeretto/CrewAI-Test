@@ -2,78 +2,56 @@
 
 ## Description
 
-Processe o arquivo PDF fornecido como entrada e extraia todas as visualizações de dados presentes no documento. Para cada visualização encontrada (gráfico, tabela, mapa, etc.), você deve:
-
-1. **Identificação Básica:**
-   - Número/ID do gráfico ou visualização no documento
-   - Página em que se localiza
-   - Título e subtítulo (se presente)
-   - Tipo de visualização (gráfico de barras, linha, scatter, tabela, mapa, etc.)
-
-2. **Metadados Visuais:**
-   - Rótulos dos eixos X e Y
-   - Legendas e categorias
-   - Unidades de medida
-   - Período de referência dos dados (se aplicável)
-
-3. **Conteúdo de Dados:**
-   - Valores principais ou ranges observados
-   - Série(s) de dados representadas
-   - Comparações ou relações visualizadas
-   - Qualquer anotação, texto ou destaque no gráfico
-
-4. **Qualidade da Visualização:**
-   - Legibilidade (clara vs. confusa)
-   - Completude (todos os eixos/legendas presentes?)
-   - Presença de ambiguidades ou inconsistências
-
-A resposta deve ser formatada como um JSON estruturado que sirva como catálogo técnico para análise posterior.
+1. **Processamento de Visão e Texto:** Analise o arquivo PDF `{REPORT_PDF}` gerado pelo sistema APOEMA. Sua missão é realizar uma engenharia reversa das visualizações de dados presentes (gráficos, tabelas e plots).
+2. **Catalogação Técnica:** Para cada elemento visual detectado, identifique obrigatoriamente:
+   - **ID e Localização:** Sequência numérica e página do documento.
+   - **Tipologia e Títulos:** Classificação (barras, linhas, dispersão, pizza, tabela) e transcrição fiel de títulos/subtítulos.
+   - **Semântica dos Eixos e Legendas:** Extração de rótulos do Eixo X (categorias/tempo) e Eixo Y (métricas/escalas), além de cores e séries de dados.
+   - **Métricas e Valores:** Identificação dos valores brutos ou aproximados representados nas séries e o período cronológico de referência.
+3. **Auditoria de Qualidade Visual:** Avalie a legibilidade, a presença de eixos nomeados e se há inconsistências (ex: legenda faltando ou escala distorcida).
+4. **Formatação Estrita:** Consolide todos os achados em um objeto JSON seguindo o esquema fornecido, garantindo que os dados estejam prontos para processamento programático por outros agentes.
 
 ## Expected Output
 
-Um array JSON contendo objetos com a seguinte estrutura para cada visualização:
+Um objeto JSON puro, sem blocos de texto explicativo antes ou depois, contendo um array de visualizações com a seguinte estrutura:
 
 ```json
 {
   "visualizacoes": [
     {
-      "id": "grafico_001",
-      "pagina": 5,
-      "titulo": "...",
-      "subtitulo": "...",
+      "id": "string",
+      "pagina": "number",
+      "titulo": "string",
+      "subtitulo": "string",
       "tipo": "bar_chart|line_chart|scatter|table|heatmap|map|other",
       "eixo_x": {
-        "rotulo": "...",
-        "unidade": "...",
-        "categorias": ["cat1", "cat2", ...]
+        "rotulo": "string",
+        "unidade": "string",
+        "categorias": ["string"]
       },
       "eixo_y": {
-        "rotulo": "...",
-        "unidade": "...",
-        "range": [min, max]
+        "rotulo": "string",
+        "unidade": "string",
+        "range": ["number", "number"]
       },
       "series_dados": [
         {
-          "nome": "...",
-          "valores": [v1, v2, ...],
-          "cor_aproximada": "#RRGGBB"
+          "nome": "string",
+          "valores": ["number/string"],
+          "cor_aproximada": "hex_code"
         }
       ],
-      "periodo_referencia": "YYYY-YYYY ou YYYY-MM-DD",
-      "legendas": [...],
-      "anotacoes": "...",
-      "observacoes_qualidade": "...",
-      "dados_extraiveis": true|false,
+      "periodo_referencia": "string",
+      "legendas": ["string"],
+      "anotacoes": "string",
+      "observacoes_qualidade": "string",
+      "dados_extraiveis": "boolean",
       "completude_visual": "alta|media|baixa"
     }
   ],
-  "resumo": {
-    "total_visualizacoes": N,
-    "tipos_presentes": [...],
-    "paginas_cobertas": [inicio, fim],
-    "observacoes_gerais": "..."
+  "resumo_extracao": {
+    "total_visualizacoes": "number",
+    "tipos_presentes": ["string"],
+    "status_processamento": "sucesso|parcial"
   }
 }
-```
-
-Retorne APENAS o objeto JSON estruturado, sem explicações adicionais.
