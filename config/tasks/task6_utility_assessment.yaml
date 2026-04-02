@@ -1,0 +1,23 @@
+name: task6_utility_assessment
+agent: utility_assessor
+description: >
+  Avalie a utilidade prática do dashboard para a área específica. Determine a pertinência dos
+  gráficos, apontando se o DNA de "Ciência da Computação" do APOEMA está prejudicando a narrativa
+  da área atual. Atribua um Score de 1 a 10 para cada gráfico baseado em Relevância, Clareza e
+  Poder de Decisão. Consolide recomendações de "Manter", "Adaptar" ou "Substituir".
+
+  1. **Avaliação Crítica:** Determine a utilidade prática para o coordenador do PPG.
+  2. **Conflito de Domínio:** Aponte se características de Computação prejudicam outras áreas.
+  3. **Score de Utilidade:** 1-10 para cada gráfico.
+  4. **Plano de Ação:** Recomendações de manutenção, adaptação ou substituição.
+expected_output: >
+  Um relatório de assertividade em Markdown com:
+
+  - **Resumo de Assertividade:** Score geral (0-100%), veredito, top 3 ações.
+  - **Avaliação de Utilidade por Visualização:** Score (1-10), classificação, público, análise.
+  - **Análise de Lacunas:** Tópicos da ficha não transformados em gráfico.
+  - **Contexto da Área vs APOEMA:** Compatibilidade com premissas da área.
+  - **Conclusão e Próximos Passos:** Parecer final com recomendações ordenadas por prioridade.
+
+  Use apenas listas e indentação. Proibido uso de tabelas (|---|) ou blocos de código complexos.
+markdown: true

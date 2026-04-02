@@ -2,7 +2,7 @@ import os
 import json
 import argparse
 from datetime import datetime
-from apoema_agent import run_apoema_pipeline
+from pipeline import run_apoema_pipeline
 
 
 def load_assessment_data(filepath="assessment_data.json"):

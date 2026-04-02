@@ -1,0 +1,30 @@
+name: task3_extract_plots
+agent: report_analyzer
+description: >
+  Processe o arquivo PDF fornecido como entrada e extraia todas as visualizações de dados
+  presentes no documento. Para cada visualização encontrada (gráfico, tabela, mapa, etc.), você deve
+  identificar:
+
+  1. **Identificação Básica:** Número/ID, página, título, subtítulo, tipo de visualização.
+  2. **Metadados Visuais:** Rótulos dos eixos, legendas, categorias, unidades de medida, período.
+  3. **Conteúdo de Dados:** Valores principais, séries de dados, comparações, anotações.
+  4. **Qualidade da Visualização:** Legibilidade, completude, presença de ambiguidades.
+
+  A resposta deve ser formatada como um JSON estruturado que sirva como catálogo técnico para
+  análise posterior.
+expected_output: >
+  Um array JSON contendo objetos com estrutura padronizada para cada visualização, incluindo:
+
+  - id: Identificador único
+  - pagina: Número da página
+  - titulo e subtitulo
+  - tipo: Tipo de visualização
+  - eixo_x, eixo_y: Rótulos, unidades, categorias
+  - series_dados: Nomes, valores, cores
+  - periodo_referencia: Período dos dados
+  - legendas e anotacoes
+  - observacoes_qualidade e dados_extraiveis
+  - resumo com total de visualizações e tipos presentes
+
+  Retorne APENAS o objeto JSON estruturado, sem explicações adicionais.
+markdown: false

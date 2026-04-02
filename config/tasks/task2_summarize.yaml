@@ -1,0 +1,23 @@
+name: task2_summarize
+agent: summarizer
+description: >
+  Com base no mapeamento técnico realizado na análise anterior, sua tarefa é traduzir esses dados
+  em um Relatório Estratégico de Avaliação para consumo humano. O foco deve ser a orientação do
+  coordenador do programa sobre como os critérios da ficha impactam a nota final no sistema CAPES.
+
+  Você deve sintetizar:
+
+  1. **Visão Macro:** O que a área de conhecimento está priorizando neste quadriênio?
+  2. **Gargalos de Nota:** Quais critérios são os maiores "detratores" de nota se não forem atendidos?
+  3. **Alvos de Excelência:** O que o programa precisa demonstrar para atingir os níveis 6 e 7?
+
+  A linguagem deve ser executiva, técnica (usando termos da CAPES/Sucupira) e extremamente organizada
+  em Markdown.
+expected_output: >
+  Um markdown estruturado contendo:
+
+  - **Resumo Executivo:** Um parágrafo que sintetiza a filosofia de avaliação da área.
+  - **Pontos Críticos para Atenção:** Gargalos com explicação do risco e métrica mínima esperada.
+  - **Diferenciais de Excelência:** O que é necessário para notas 6 e 7.
+  - **Matriz de Prioridade Recomendada:** Ações ordenadas por prioridade (Alta, Média, Baixa).
+markdown: true
