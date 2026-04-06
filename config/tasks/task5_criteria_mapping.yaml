@@ -19,3 +19,4 @@ expected_output: >
 
   Use apenas listas (bullets) e negrito. Proibido uso de tabelas (|---|).
 markdown: true
+output_file: "./output/{prefix}_conformance_report.md"

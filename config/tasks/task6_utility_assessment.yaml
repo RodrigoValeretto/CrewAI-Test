@@ -21,3 +21,4 @@ expected_output: >
 
   Use apenas listas e indentação. Proibido uso de tabelas (|---|) ou blocos de código complexos.
 markdown: true
+output_file: "./output/{prefix}_utility_assessment.md"

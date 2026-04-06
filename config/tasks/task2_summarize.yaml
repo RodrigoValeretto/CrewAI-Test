@@ -21,3 +21,4 @@ expected_output: >
   - **Diferenciais de Excelência:** O que é necessário para notas 6 e 7.
   - **Matriz de Prioridade Recomendada:** Ações ordenadas por prioridade (Alta, Média, Baixa).
 markdown: true
+output_file: "./output/{prefix}_output.md"
