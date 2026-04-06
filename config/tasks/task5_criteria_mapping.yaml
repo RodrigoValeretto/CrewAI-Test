@@ -1,22 +1,37 @@
 name: task5_criteria_mapping
 agent: report_analyzer
 description: >
-  Realize o cruzamento final de conformidade entre os critérios extraídos da Ficha de Avaliação
-  e as análises das visualizações. Para cada gráfico do APOEMA:
-
-  1. **Mapeamento de Critérios:** Identifique qual Quesito e Indicador específico da CAPES endereça.
-  Classifique o alinhamento como Total, Parcial ou Desalinhado.
-  2. **Auditoria de Cobertura:** Identifique critérios de alto peso sem representação visual.
-  3. **Cálculo de Risco:** Determine o nível de risco de avaliação negativa por quesito.
-  4. **Redação do Relatório Final:** Traduza inteligência técnica em relatório textual organizado.
+  1. **Integração de Perspectivas:** Utilize os critérios extraídos da Ficha de Avaliação e as análises das visualizações para realizar o cruzamento final de conformidade.
+  2. **Mapeamento de Critérios:** Para cada gráfico do APOEMA, identifique qual Quesito e Indicador específico da CAPES ele endereça. Classifique o alinhamento como Total, Parcial ou Desalinhado.
+  3. **Auditoria de Cobertura:** Identifique "zonas de sombra" — critérios de alto peso na ficha que não possuem representação visual no relatório analisado.
+  4. **Cálculo de Risco:** Baseado na tendência dos dados, determine o nível de risco de uma avaliação negativa (Baixo, Médio, Alto) para cada quesito.
+  5. **Redação do Relatório Final:** Traduza toda a inteligência técnica em um relatório puramente textual, organizado por tópicos claros.
 expected_output: >
-  Um relatório detalhado em Markdown com:
+  Um relatório detalhado em Markdown, sem tabelas ou matrizes gráficas, estruturado da seguinte forma:
 
-  - **Diagnóstico de Conformidade CAPES:** Resumo executivo e score geral (0-100%).
-  - **Análise por Quesito:** Gráficos associados, status de evidência, nível de risco, diagnóstico.
-  - **Lacunas de Evidência:** Critérios ausentes e sugestões de dados necessários.
-  - **Recomendações Estratégicas:** Ações prioritárias para melhorar conformidade.
+  ### 📊 Diagnóstico de Conformidade CAPES
 
-  Use apenas listas (bullets) e negrito. Proibido uso de tabelas (|---|).
+  * **Resumo Executivo:** Análise da maturidade dos dados frente à ficha de avaliação da área.
+  * **Score Geral de Aderência:** [0-100%].
+
+  ### 🔍 Análise por Quesito de Avaliação
+
+  (Repita o bloco abaixo para cada quesito encontrado):
+
+  * **Quesito [Nome] - Peso [X%]:**
+    * **Gráficos Associados:** [Lista de IDs].
+    * **Status de Evidência:** [Suficiente / Insuficiente / Ausente].
+    * **Nível de Risco:** [Baixo/Médio/Alto].
+    * **Diagnóstico:** Justificativa textual sobre como os dados deste quesito sustentam (ou não) a nota do programa.
+
+  ### ⚠️ Lacunas de Evidência (Gap Analysis)
+
+  * **Critério Ausente [Nome]:** Descrição do que a ficha exige e por que não há visualização correspondente no APOEMA. Sugestão de dado necessário.
+
+  ### 🚀 Recomendações Estratégicas
+
+  * Liste as ações prioritárias para melhorar a conformidade do programa.
+
+  **Instrução de Formato:** Retorne APENAS o relatório em Markdown. Use apenas listas (bullets) e negrito. Proibido o uso de tabelas (|---|).
 markdown: true
 output_file: "./output/{prefix}_conformance_report.md"

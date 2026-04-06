@@ -27,7 +27,7 @@ def parse_arguments():
     )
 
     args = parser.parse_args()
-    return args.assessment_path, args.pdf_file, args.prefix
+    return args.assessment_file, args.pdf_file, args.prefix
 
 
 def main():

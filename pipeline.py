@@ -14,10 +14,10 @@ class APOEMACrewBase:
     """Base crew configuration for APOEMA system using YAML configs."""
 
     def __init__(
-        self, assessment_data: str, pdf_path: str = None, output_prefix: str = None
+        self, assessment_path: str, pdf_path: str = None, output_prefix: str = None
     ):
         """Initialize crew with assessment data and optional PDF."""
-        self.assessment_data = TextFile(assessment_data)
+        self.assessment_file = TextFile(source=assessment_path)
         self.pdf_file = None
         self.output_prefix = output_prefix or datetime.now().strftime("%Y%m%d%H%M%S")
 
@@ -140,7 +140,7 @@ class APOEMACrewBase:
     def run_pipeline(self) -> str:
         """Execute the appropriate pipeline."""
         input_files = {
-            "assessment_data": self.assessment_data,
+            "assessment_data": self.assessment_file,
             "pdf_report": self.pdf_file,
         }
 

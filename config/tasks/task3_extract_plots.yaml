@@ -1,30 +1,77 @@
 name: task3_extract_plots
 agent: report_analyzer
 description: >
-  Processe o arquivo PDF fornecido em `{pdf_report}` e extraia todas as visualizações de dados
-  presentes no documento. Para cada visualização encontrada (gráfico, tabela, mapa, etc.), você deve
-  identificar:
+  Processe o arquivo PDF fornecido como entrada em `{pdf_report}` e extraia todas as visualizações de dados presentes no documento. Para cada visualização encontrada (gráfico, tabela, mapa, etc.), você deve:
 
-  1. **Identificação Básica:** Número/ID, página, título, subtítulo, tipo de visualização.
-  2. **Metadados Visuais:** Rótulos dos eixos, legendas, categorias, unidades de medida, período.
-  3. **Conteúdo de Dados:** Valores principais, séries de dados, comparações, anotações.
-  4. **Qualidade da Visualização:** Legibilidade, completude, presença de ambiguidades.
+  1. **Identificação Básica:**
+     - Número/ID do gráfico ou visualização no documento
+     - Página em que se localiza
+     - Título e subtítulo (se presente)
+     - Tipo de visualização (gráfico de barras, linha, scatter, tabela, mapa, etc.)
 
-  A resposta deve ser formatada como um JSON estruturado que sirva como catálogo técnico para
-  análise posterior.
+  2. **Metadados Visuais:**
+     - Rótulos dos eixos X e Y
+     - Legendas e categorias
+     - Unidades de medida
+     - Período de referência dos dados (se aplicável)
+
+  3. **Conteúdo de Dados:**
+     - Valores principais ou ranges observados
+     - Série(s) de dados representadas
+     - Comparações ou relações visualizadas
+     - Qualquer anotação, texto ou destaque no gráfico
+
+  4. **Qualidade da Visualização:**
+     - Legibilidade (clara vs. confusa)
+     - Completude (todos os eixos/legendas presentes?)
+     - Presença de ambiguidades ou inconsistências
+
+  A resposta deve ser formatada como um JSON estruturado que sirva como catálogo técnico para análise posterior.
 expected_output: >
-  Um array JSON contendo objetos com estrutura padronizada para cada visualização, incluindo:
+  Um array JSON contendo objetos com a seguinte estrutura para cada visualização:
 
-  - id: Identificador único
-  - pagina: Número da página
-  - titulo e subtitulo
-  - tipo: Tipo de visualização
-  - eixo_x, eixo_y: Rótulos, unidades, categorias
-  - series_dados: Nomes, valores, cores
-  - periodo_referencia: Período dos dados
-  - legendas e anotacoes
-  - observacoes_qualidade e dados_extraiveis
-  - resumo com total de visualizações e tipos presentes
+  ```json
+  {
+    "visualizacoes": [
+      {
+        "id": "grafico_001",
+        "pagina": 5,
+        "titulo": "...",
+        "subtitulo": "...",
+        "tipo": "bar_chart|line_chart|scatter|table|heatmap|map|other",
+        "eixo_x": {
+          "rotulo": "...",
+          "unidade": "...",
+          "categorias": ["cat1", "cat2", ...]
+        },
+        "eixo_y": {
+          "rotulo": "...",
+          "unidade": "...",
+          "range": [min, max]
+        },
+        "series_dados": [
+          {
+            "nome": "...",
+            "valores": [v1, v2, ...],
+            "cor_aproximada": "#RRGGBB"
+          }
+        ],
+        "periodo_referencia": "YYYY-YYYY ou YYYY-MM-DD",
+        "legendas": [...],
+        "anotacoes": "...",
+        "observacoes_qualidade": "...",
+        "dados_extraiveis": true|false,
+        "completude_visual": "alta|media|baixa"
+      }
+    ],
+    "resumo": {
+      "total_visualizacoes": N,
+      "tipos_presentes": [...],
+      "paginas_cobertas": [inicio, fim],
+      "observacoes_gerais": "..."
+    }
+  }
+  ```
 
   Retorne APENAS o objeto JSON estruturado, sem explicações adicionais.
 markdown: false
