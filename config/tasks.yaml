@@ -1,0 +1,308 @@
+task1_analyze:
+  name: task1_analyze
+  agent: data_reader
+  description: >
+    Realize uma análise técnica e estrutural do conteúdo extraído da ficha de avaliação da CAPES fornecida no arquivo `{assessment_data}`. O objetivo é transformar a transcrição bruta em um esquema lógico de critérios de avaliação.
+
+    Você deve identificar e mapear obrigatoriamente:
+
+    1. **Metadados da Ficha:** Área de avaliação (ex: Interdisciplinar, Medicina), Quadriênio e data de publicação.
+    2. **Taxonomia da Avaliação:** Mapeie a hierarquia de Quesitos, Itens e Indicadores.
+    3. **Métricas de Desempenho:** Extraia quais são os indicadores quantitativos (ex: N de publicações por docente) e qualitativos (ex: impacto social) exigidos.
+    4. **Réguas de Nota:** Identifique os critérios que diferenciam um programa "Bom" (Nota 4) de um programa de "Excelência" (Notas 6 e 7).
+    5. **Vínculo com o APOEMA:** Identifique quais desses critérios podem ser representados por dados de produção, corpo docente ou discente (que são os dados que o APOEMA agrega).
+
+    A resposta deve ser rigorosamente em **português-brasileiro** e formatada como um objeto **JSON** puro, sem textos explicativos fora do bloco de código.
+  expected_output: >
+    Um objeto JSON estruturado que funcione como um "Mapa de Calor de Importância", contendo:
+
+    - `area_conhecimento`: Nome da área.
+    - `quadrienio`: Período de referência.
+    - `estrutura_quesitos`: Array de objetos contendo `nome_quesito`, `peso_relativo` e `indicadores_chave`.
+    - `criterios_sucesso`: Descrição do que é necessário para atingir notas superiores.
+    - `mapeamento_apoema`: Sugestões de quais tipos de dados (Produção, Egressos, Docentes) devem ser cruzados com esta ficha.
+
+task2_summarize:
+  name: task2_summarize
+  agent: summarizer
+  description: >
+    Com base no mapeamento técnico realizado na análise anterior, sua tarefa é traduzir esses dados em um **Relatório Estratégico de Avaliação** para consumo humano. O foco deve ser a orientação do coordenador do programa sobre como os critérios da ficha impactam a nota final no sistema CAPES.
+
+    Você deve sintetizar:
+
+    1. **Visão Macro:** O que a área de conhecimento (ex: Computação, Artes, etc.) está priorizando neste quadriênio?
+    2. **Gargalos de Nota:** Quais critérios são os maiores "detratores" de nota se não forem atendidos?
+    3. **Alvos de Excelência:** O que o programa precisa demonstrar para atingir os níveis 6 e 7 (internacionalização, impacto, etc.)?
+
+    A linguagem deve ser executiva, técnica (usando termos da CAPES/Sucupira) e extremamente organizada em Markdown.
+  expected_output: >
+    O output esperado é um markdown estruturado conforme o exemplo abaixo:
+
+    ### 🎯 Resumo Executivo
+
+    [Um parágrafo de 3 a 4 frases que sintetiza a filosofia de avaliação da área e o nível de exigência esperado para o quadriênio vigente.]
+
+    ### ⚠️ Pontos Críticos para Atenção (Gargalos)
+
+    - **[Nome do Quesito/Item]**: Explique por que este ponto é um risco e qual a métrica mínima esperada (ex: índice de publicações por docente permanente).
+    - **[Nome do Quesito/Item]**: Descrição da vulnerabilidade e impacto na nota.
+
+    ### 🚀 Diferenciais de Excelência (Notas 6 e 7)
+
+    - **Critério de Impacto**: O que a ficha define como "Inserção Social" ou "Internacionalização" de alto nível.
+    - **Liderança da Área**: Menção a prêmios, convênios ou visibilidade internacional citada na ficha.
+
+    ### 📋 Matriz de Prioridade Recomendada
+
+    1. **Prioridade Alta (Imediata):** [Ação ou indicador que deve ser validado agora nas visualizações do APOEMA para evitar rebaixamento].
+    2. **Prioridade Média (Estrutural):** [Melhorias de médio prazo no corpo docente ou discente].
+    3. **Prioridade Baixa (Manutenção):** [Itens de acompanhamento contínuo que já estão em conformidade].
+  markdown: true
+  output_file: "./output/{prefix}_task2_output.md"
+
+task3_extract_plots:
+  name: task3_extract_plots
+  agent: report_analyzer
+  description: >
+    Processe o arquivo PDF fornecido como entrada e extraia todas as visualizações de dados presentes no documento. Para cada visualização encontrada (gráfico, tabela, mapa, etc.), você deve:
+
+    1. **Identificação Básica:**
+       - Número/ID do gráfico ou visualização no documento
+       - Página em que se localiza
+       - Título e subtítulo (se presente)
+       - Tipo de visualização (gráfico de barras, linha, scatter, tabela, mapa, etc.)
+
+    2. **Metadados Visuais:**
+       - Rótulos dos eixos X e Y
+       - Legendas e categorias
+       - Unidades de medida
+       - Período de referência dos dados (se aplicável)
+
+    3. **Conteúdo de Dados:**
+       - Valores principais ou ranges observados
+       - Série(s) de dados representadas
+       - Comparações ou relações visualizadas
+       - Qualquer anotação, texto ou destaque no gráfico
+
+    4. **Qualidade da Visualização:**
+       - Legibilidade (clara vs. confusa)
+       - Completude (todos os eixos/legendas presentes?)
+       - Presença de ambiguidades ou inconsistências
+
+    A resposta deve ser formatada como um JSON estruturado que sirva como catálogo técnico para análise posterior.
+  expected_output: >
+    Um array JSON contendo objetos com a seguinte estrutura para cada visualização:
+
+    ```json
+    {
+      "visualizacoes": [
+        {
+          "id": "grafico_001",
+          "pagina": 5,
+          "titulo": "...",
+          "subtitulo": "...",
+          "tipo": "bar_chart|line_chart|scatter|table|heatmap|map|other",
+          "eixo_x": {
+            "rotulo": "...",
+            "unidade": "...",
+            "categorias": ["cat1", "cat2", ...]
+          },
+          "eixo_y": {
+            "rotulo": "...",
+            "unidade": "...",
+            "range": [min, max]
+          },
+          "series_dados": [
+            {
+              "nome": "...",
+              "valores": [v1, v2, ...],
+              "cor_aproximada": "#RRGGBB"
+            }
+          ],
+          "periodo_referencia": "YYYY-YYYY ou YYYY-MM-DD",
+          "legendas": [...],
+          "anotacoes": "...",
+          "observacoes_qualidade": "...",
+          "dados_extraiveis": true|false,
+          "completude_visual": "alta|media|baixa"
+        }
+      ],
+      "resumo": {
+        "total_visualizacoes": N,
+        "tipos_presentes": [...],
+        "paginas_cobertas": [inicio, fim],
+        "observacoes_gerais": "..."
+      }
+    }
+    ```
+
+    Retorne APENAS o objeto JSON estruturado, sem explicações adicionais.
+  markdown: false
+
+task4_analyze_plots:
+  name: task4_analyze_plots
+  agent: report_analyzer
+  description: >
+    Baseado no catálogo de visualizações extraído na tarefa anterior, realize uma análise profunda de cada gráfico para gerar insights significativos e validação de dados. Para cada visualização:
+
+    1. **Análise de Dados:**
+       - Identifique a tendência ou padrão principal (crescimento, declínio, estabilidade, ciclos)
+       - Calcule ou estime mudanças percentuais, taxas de crescimento ou variações
+       - Identifique outliers ou valores anormais
+       - Determine correlações ou relacionamentos entre séries (se múltiplas)
+
+    2. **Validação de Qualidade:**
+       - Verifique se há valores faltantes ou inconsistências nos dados
+       - Avalie se a escala do gráfico representa adequadamente os dados
+       - Identifique se há distorções visuais intencionais ou não
+
+    3. **Contexto e Significado:**
+       - O que este gráfico está comunicando sobre o programa?
+       - Quais são as implicações dos dados mostrados?
+       - Qual é a narrativa que o gráfico constrói?
+
+    4. **Insights Acionáveis:**
+       - Quais são os principais achados?
+       - Há razões de preocupação ou pontos positivos?
+       - Quais são as áreas que requerem atenção ou celebração?
+
+    Considere que estes dados serão avaliados sob a perspectiva dos critérios CAPES de avaliação de pós-graduação.
+  expected_output: >
+    Um objeto JSON contendo análises estruturadas:
+
+    ```json
+    {
+      "analises_detalhadas": [
+        {
+          "id_grafico": "grafico_001",
+          "titulo_original": "...",
+          "analise_dados": {
+            "tendencia_principal": "crescimento|declinio|estabilidade|ciclico|misto",
+            "descricao_tendencia": "...",
+            "valores_chave": {
+              "minimo": value,
+              "maximo": value,
+              "media": value,
+              "tendencia_percentual": "X% ao longo do período"
+            },
+            "outliers_detectados": ["descrição de outlier 1", ...],
+            "comparacoes_entre_series": "..."
+          },
+          "validacao": {
+            "dados_incompletos": true|false,
+            "descricao_lacunas": "...",
+            "inconsistencias": [],
+            "qualidade_geral": "alta|media|baixa",
+            "recomendacoes_melhoria": ["...", "..."]
+          },
+          "contexto": {
+            "o_que_comunica": "...",
+            "implicacoes": "...",
+            "narrativa": "..."
+          },
+          "insights": {
+            "achados_principais": ["insight 1", "insight 2", ...],
+            "pontos_positivos": ["ponto 1", ...],
+            "areas_preocupacao": ["area 1", ...],
+            "areas_celebracao": ["area 1", ...]
+          },
+          "recomendacoes": [
+            {
+              "tipo": "melhoria|investigacao|acao",
+              "descricao": "..."
+            }
+          ]
+        }
+      ],
+      "sintese_geral": {
+        "padroes_globais": "...",
+        "coerencia_narrativa": "...",
+        "forca_evidencial": "alta|media|baixa"
+      }
+    }
+    ```
+
+    Retorne APENAS o objeto JSON estruturado, sem explicações adicionais.
+  markdown: false
+
+task5_criteria_mapping:
+  name: task5_criteria_mapping
+  agent: report_analyzer
+  description: >
+    1. **Integração de Perspectivas:** Utilize os critérios extraídos da Ficha de Avaliação e as análises das visualizações para realizar o cruzamento final de conformidade.
+    2. **Mapeamento de Critérios:** Para cada gráfico do APOEMA, identifique qual Quesito e Indicador específico da CAPES ele endereça. Classifique o alinhamento como Total, Parcial ou Desalinhado.
+    3. **Auditoria de Cobertura:** Identifique "zonas de sombra" — critérios de alto peso na ficha que não possuem representação visual no relatório analisado.
+    4. **Cálculo de Risco:** Baseado na tendência dos dados, determine o nível de risco de uma avaliação negativa (Baixo, Médio, Alto) para cada quesito.
+    5. **Redação do Relatório Final:** Traduza toda a inteligência técnica em um relatório puramente textual, organizado por tópicos claros.
+  expected_output: >
+    Um relatório detalhado em Markdown, sem tabelas ou matrizes gráficas, estruturado da seguinte forma:
+
+    ### 📊 Diagnóstico de Conformidade CAPES
+
+    * **Resumo Executivo:** Análise da maturidade dos dados frente à ficha de avaliação da área.
+    * **Score Geral de Aderência:** [0-100%].
+
+    ### 🔍 Análise por Quesito de Avaliação
+
+    (Repita o bloco abaixo para cada quesito encontrado):
+
+    * **Quesito [Nome] - Peso [X%]:**
+      * **Gráficos Associados:** [Lista de IDs].
+      * **Status de Evidência:** [Suficiente / Insuficiente / Ausente].
+      * **Nível de Risco:** [Baixo/Médio/Alto].
+      * **Diagnóstico:** Justificativa textual sobre como os dados deste quesito sustentam (ou não) a nota do programa.
+
+    ### ⚠️ Lacunas de Evidência (Gap Analysis)
+
+    * **Critério Ausente [Nome]:** Descrição do que a ficha exige e por que não há visualização correspondente no APOEMA. Sugestão de dado necessário.
+
+    ### 🚀 Recomendações Estratégicas
+
+    * Liste as ações prioritárias para melhorar a conformidade do programa.
+
+    **Instrução de Formato:** Retorne APENAS o relatório em Markdown. Use apenas listas (bullets) e negrito. Proibido o uso de tabelas (|---|).
+  markdown: true
+  output_file: "./output/{prefix}_task5_conformance_report.md"
+
+task6_utility_assessment:
+  name: task6_utility_assessment
+  agent: utility_assessor
+  description: >
+    1. **Avaliação Crítica de Pertinência:** Determine a utilidade prática do dashboard para a área específica. O foco é se o gráfico agrega valor estratégico para o coordenador do PPG.
+    2. **Conflito de Domínio:** Aponte se o DNA de "Ciência da Computação" do APOEMA está prejudicando a narrativa da área atual.
+    3. **Julgamento de Valor:** Atribua um Score de 1 a 10 para cada gráfico baseado em Relevância, Clareza e Poder de Decisão.
+    4. **Plano de Ação:** Consolide recomendações de "Manter", "Adaptar" ou "Substituir" de forma puramente textual.
+  expected_output: >
+    Um relatório de assertividade em Markdown, focado em texto direto, estruturado da seguinte forma:
+
+    ### ⚡ Resumo de Assertividade
+
+    * **Score Geral:** [0-100%].
+    * **Veredito:** Frase curta sobre a utilidade para a área.
+    * **Top 3 Ações Prioritárias:** [Lista simples].
+
+    ### 1. Avaliação de Utilidade por Visualização
+
+    (Repita para cada gráfico):
+
+    * **[ID] - [Título]:**
+      * **Score de Assertividade:** [1-10].
+      * **Classificação:** [Essencial / Útil / Marginal / Irrelevante].
+      * **Público Beneficiado:** [Quem mais usa esse dado].
+      * **Análise e Recomendação:** Justificativa textual curta e decisão final (Manter/Melhorar/Remover).
+
+    ### 2. Análise de Lacunas e Narrativa
+
+    * Liste os tópicos que a ficha de avaliação exige, mas que o APOEMA não transformou em gráfico, explicando o impacto disso para a área.
+
+    ### 3. Contexto da Área vs. APOEMA
+
+    * Parágrafo direto sobre a compatibilidade do sistema com as premissas da área (ex: Humanas vs. Exatas).
+
+    ### 4. Conclusão e Próximos Passos
+
+    * Parecer final e lista de recomendações ordenadas por prioridade (Alta, Média, Baixa), incluindo esforço e impacto estimados em texto.
+
+    **Instrução de Formato:** Retorne APENAS o relatório em Markdown. Proibido o uso de tabelas (|---|) ou blocos de código complexos. Use listas e indentação para organizar os dados.
+  markdown: true
+  output_file: "./output/{prefix}_task6_utility_assessment.md"

@@ -34,16 +34,12 @@ class APOEMACrewBase:
         )
 
     def _load_agent_config(self, agent_name: str) -> dict:
-        """Load agent config from YAML."""
-        config_path = Path(__file__).parent / "config" / "agents" / f"{agent_name}.yaml"
-        with open(config_path) as f:
-            return yaml.safe_load(f)
+        """Load agent config from consolidated YAML."""
+        return self.agents_config[agent_name]
 
     def _load_task_config(self, task_name: str) -> dict:
-        """Load task config from YAML."""
-        config_path = Path(__file__).parent / "config" / "tasks" / f"{task_name}.yaml"
-        with open(config_path) as f:
-            return yaml.safe_load(f)
+        """Load task config from consolidated YAML."""
+        return self.tasks_config[task_name]
 
     @agent
     def data_reader(self) -> Agent:
