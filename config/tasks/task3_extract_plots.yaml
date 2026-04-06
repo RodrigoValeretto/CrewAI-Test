@@ -1,7 +1,7 @@
 name: task3_extract_plots
 agent: report_analyzer
 description: >
-  Processe o arquivo PDF fornecido como entrada e extraia todas as visualizações de dados
+  Processe o arquivo PDF fornecido em `{pdf_report}` e extraia todas as visualizações de dados
   presentes no documento. Para cada visualização encontrada (gráfico, tabela, mapa, etc.), você deve
   identificar:
 

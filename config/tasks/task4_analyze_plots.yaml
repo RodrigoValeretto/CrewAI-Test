@@ -1,8 +1,9 @@
 name: task4_analyze_plots
 agent: report_analyzer
 description: >
-  Baseado no catálogo de visualizações extraído na tarefa anterior, realize uma análise profunda
-  de cada gráfico para gerar insights significativos e validação de dados. Para cada visualização:
+  Baseado no arquivo `{pdf_report}` e no catálogo de visualizações extraído na tarefa anterior,
+  realize uma análise profunda de cada gráfico para gerar insights significativos e validação de dados.
+  Para cada visualização:
 
   1. **Análise de Dados:** Identifique tendência, padrão, mudanças percentuais, outliers, correlações.
   2. **Validação de Qualidade:** Verifique inconsistências, escala adequada, distorções visuais.

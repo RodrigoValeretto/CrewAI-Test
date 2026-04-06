@@ -1,19 +1,7 @@
 import os
-import json
 import argparse
 from datetime import datetime
 from pipeline import run_apoema_pipeline
-
-
-def load_assessment_data(filepath="assessment_data.json"):
-    """Load assessment data from JSON file."""
-    try:
-        with open(filepath, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return None
-    except json.JSONDecodeError:
-        return None
 
 
 def parse_arguments():
@@ -39,20 +27,16 @@ def parse_arguments():
     )
 
     args = parser.parse_args()
-    return args.assessment_file, args.pdf_file, args.prefix
+    return args.assessment_path, args.pdf_file, args.prefix
 
 
 def main():
     """Main entry point."""
-    assessment_file, pdf_path, output_prefix = parse_arguments()
-    assessment_data = load_assessment_data(assessment_file)
+    assessment_path, pdf_path, output_prefix = parse_arguments()
 
-    if assessment_data is None:
-        print(f"Erro: Não foi possível carregar o arquivo {assessment_file}")
+    if assessment_path is None or not os.path.exists(assessment_path):
+        print(f"Erro: Não foi possível encontrar o arquivo {assessment_path}")
         exit(1)
-
-    # Convert assessment data to string for agent processing
-    assessment_data_str = json.dumps(assessment_data, ensure_ascii=False, indent=2)
 
     # Display PDF information
     if pdf_path and os.path.exists(pdf_path):
@@ -65,14 +49,16 @@ def main():
         print(
             "   Uso: python main.py --assessment-file <arquivo.json> --pdf-file <arquivo.pdf>"
         )
-        print("   Uso (apenas assessment): python main.py --assessment-file <arquivo.json>")
+        print(
+            "   Uso (apenas assessment): python main.py --assessment-file <arquivo.json>"
+        )
         print(
             "   Uso (com prefixo customizado): python main.py --assessment-file <arquivo.json> --prefix my_run"
         )
         print("\nExecutando apenas tarefas 1 e 2...\n")
 
     # Run the APOEMA pipeline
-    result = run_apoema_pipeline(assessment_data_str, pdf_path, output_prefix)
+    result = run_apoema_pipeline(assessment_path, pdf_path, output_prefix)
 
     print("\n" + "=" * 80)
     print("EXECUÇÃO CONCLUÍDA")

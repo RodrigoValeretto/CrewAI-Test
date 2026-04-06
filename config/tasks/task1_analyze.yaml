@@ -2,7 +2,7 @@ name: task1_analyze
 agent: data_reader
 description: >
   Realize uma análise técnica e estrutural do conteúdo extraído da ficha de avaliação da CAPES
-  fornecida no campo `{assessment_data}`. O objetivo é transformar a transcrição bruta em um
+  fornecida no arquivo `{assessment_data}`. O objetivo é transformar a transcrição bruta em um
   esquema lógico de critérios de avaliação.
 
   Você deve identificar e mapear obrigatoriamente:
