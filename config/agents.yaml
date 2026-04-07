@@ -28,6 +28,7 @@ data_reader:
     critérios de avaliação.
   verbose: true
   allow_delegation: false
+  llm: gemini/gemini-2.5-flash
 
 summarizer:
   name: summarizer
@@ -56,6 +57,7 @@ summarizer:
     Markdown.
   verbose: true
   allow_delegation: false
+  llm: gemini/gemini-2.5-flash
 
 report_analyzer:
   name: report_analyzer
@@ -84,6 +86,7 @@ report_analyzer:
     4. Diagnóstico de relevância avaliando se a visualização é suficiente para atribuir nota
   verbose: true
   allow_delegation: false
+  llm: gemini/gemini-2.5-flash
 
 utility_assessor:
   name: utility_assessor
@@ -112,3 +115,4 @@ utility_assessor:
     5. Recomendações de substituição ou adaptação de gráficos
   verbose: true
   allow_delegation: false
+  llm: gemini/gemini-2.5-flash

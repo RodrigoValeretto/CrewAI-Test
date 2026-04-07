@@ -1,12 +1,10 @@
 """APOEMA Crew implementation using CrewBase and YAML configuration."""
 
 import os
-from pathlib import Path
 from crewai import Agent, Task, Crew, Process, LLM
 from crewai.project import CrewBase, agent, task, crew
 from crewai_files import PDFFile, TextFile
 from datetime import datetime
-import yaml
 
 
 @CrewBase
@@ -24,15 +22,6 @@ class APOEMACrewBase:
         if pdf_path and os.path.exists(pdf_path):
             self.pdf_file = PDFFile(source=pdf_path)
 
-    def _get_llm(self) -> LLM:
-        """Create and return LLM instance."""
-        gemini_api_key = os.getenv("GEMINI_API_KEY")
-        return LLM(
-            model="gemini/gemini-2.5-flash",
-            api_key=gemini_api_key,
-            temperature=0.7,
-        )
-
     def _load_agent_config(self, agent_name: str) -> dict:
         """Load agent config from consolidated YAML."""
         return self.agents_config[agent_name]
@@ -44,26 +33,22 @@ class APOEMACrewBase:
     @agent
     def data_reader(self) -> Agent:
         """Data Reader Agent."""
-        return Agent(config=self._load_agent_config("data_reader"), llm=self._get_llm())
+        return Agent(config=self._load_agent_config("data_reader"))
 
     @agent
     def summarizer(self) -> Agent:
         """Summarizer Agent."""
-        return Agent(config=self._load_agent_config("summarizer"), llm=self._get_llm())
+        return Agent(config=self._load_agent_config("summarizer"))
 
     @agent
     def report_analyzer(self) -> Agent:
         """Report Analyzer Agent."""
-        return Agent(
-            config=self._load_agent_config("report_analyzer"), llm=self._get_llm()
-        )
+        return Agent(config=self._load_agent_config("report_analyzer"))
 
     @agent
     def utility_assessor(self) -> Agent:
         """Utility Assessor Agent."""
-        return Agent(
-            config=self._load_agent_config("utility_assessor"), llm=self._get_llm()
-        )
+        return Agent(config=self._load_agent_config("utility_assessor"))
 
     @task
     def analyze_assessment_data(self) -> Task:
