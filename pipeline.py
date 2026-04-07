@@ -136,8 +136,8 @@ class APOEMACrewBase:
     def run_pipeline(self) -> str:
         """Execute the appropriate pipeline."""
         input_files = {
-            "assessment_data": self.assessment_file,
             "pdf_report": self.pdf_file,
+            "assessment_data": self.assessment_file,
         }
 
         inputs = {"prefix": self.output_prefix}

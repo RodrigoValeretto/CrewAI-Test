@@ -2,7 +2,7 @@ task1_analyze:
   name: task1_analyze
   agent: data_reader
   description: >
-    Realize uma análise técnica e estrutural do conteúdo extraído da ficha de avaliação da CAPES fornecida no arquivo `{assessment_data}`. O objetivo é transformar a transcrição bruta em um esquema lógico de critérios de avaliação.
+    Realize uma análise técnica e estrutural do conteúdo extraído da ficha de avaliação da CAPES fornecida no arquivo assessment_data. O objetivo é transformar a transcrição bruta em um esquema lógico de critérios de avaliação.
 
     Você deve identificar e mapear obrigatoriamente:
 
@@ -58,13 +58,13 @@ task2_summarize:
     2. **Prioridade Média (Estrutural):** [Melhorias de médio prazo no corpo docente ou discente].
     3. **Prioridade Baixa (Manutenção):** [Itens de acompanhamento contínuo que já estão em conformidade].
   markdown: true
-  output_file: "./output/{prefix}_task2_output.md"
+  output_file: "./output/{prefix}_output.md"
 
 task3_extract_plots:
   name: task3_extract_plots
   agent: report_analyzer
   description: >
-    Processe o arquivo PDF fornecido como entrada e extraia todas as visualizações de dados presentes no documento. Para cada visualização encontrada (gráfico, tabela, mapa, etc.), você deve:
+    Processe o arquivo PDF fornecido como entrada em pdf_report e extraia todas as visualizações de dados presentes no documento. Para cada visualização encontrada (gráfico, tabela, mapa, etc.), você deve:
 
     1. **Identificação Básica:**
        - Número/ID do gráfico ou visualização no documento
@@ -143,7 +143,7 @@ task4_analyze_plots:
   name: task4_analyze_plots
   agent: report_analyzer
   description: >
-    Baseado no catálogo de visualizações extraído na tarefa anterior, realize uma análise profunda de cada gráfico para gerar insights significativos e validação de dados. Para cada visualização:
+    Baseado no catálogo de visualizações extraído na tarefa anterior e no arquivo pdf_report, realize uma análise profunda de cada gráfico para gerar insights significativos e validação de dados. Para cada visualização:
 
     1. **Análise de Dados:**
        - Identifique a tendência ou padrão principal (crescimento, declínio, estabilidade, ciclos)
@@ -262,7 +262,7 @@ task5_criteria_mapping:
 
     **Instrução de Formato:** Retorne APENAS o relatório em Markdown. Use apenas listas (bullets) e negrito. Proibido o uso de tabelas (|---|).
   markdown: true
-  output_file: "./output/{prefix}_task5_conformance_report.md"
+  output_file: "./output/{prefix}_conformance_report.md"
 
 task6_utility_assessment:
   name: task6_utility_assessment
@@ -305,4 +305,4 @@ task6_utility_assessment:
 
     **Instrução de Formato:** Retorne APENAS o relatório em Markdown. Proibido o uso de tabelas (|---|) ou blocos de código complexos. Use listas e indentação para organizar os dados.
   markdown: true
-  output_file: "./output/{prefix}_task6_utility_assessment.md"
+  output_file: "./output/{prefix}_utility_assessment.md"
