@@ -80,7 +80,7 @@ cd crewai-test
 **Instalar dependências com uv:**
 ```bash
 # uv cria automaticamente o ambiente virtual .venv e instala tudo
-uv sync
+make install
 ```
 
 **Ou (alternativo com pip - mais lento):**
@@ -119,7 +119,10 @@ set GEMINI_API_KEY=sua-chave-aqui
 Analisa a ficha de avaliação (Tarefas 1-2):
 
 ```bash
-# Com uv (recomendado)
+# Usando Makefile (recomendado)
+make run
+
+# Ou com uv diretamente
 uv run python main.py
 
 # Ou com o ambiente virtual ativado
@@ -143,24 +146,36 @@ Execução concluída!
 Realiza análise de critérios + análise de visualizações do relatório (Tarefas 1-5):
 
 ```bash
-# Com uv (recomendado)
-uv run python main.py /caminho/para/relatorio.pdf
+# Usando Makefile (recomendado)
+make run pdf-file=/caminho/para/relatorio.pdf
+
+# Ou com uv diretamente
+uv run python main.py --pdf-file /caminho/para/relatorio.pdf
 
 # Ou com o ambiente virtual ativado
 source .venv/bin/activate  # Linux/Mac
-python main.py /caminho/para/relatorio.pdf
+python main.py --pdf-file /caminho/para/relatorio.pdf
 ```
 
 **Exemplos práticos:**
 ```bash
-# Relatório local
-python main.py ./reports/apoema_2025.pdf
+# Análise básica
+make run
 
-# Relatório em diretório específico
-python main.py /home/usuario/Documentos/relatorio_computacao.pdf
+# Com arquivo de avaliação customizado
+make run assessment-file=./data/custom_assessment.json
 
-# Arquivo no diretório atual
-python main.py relatorio.pdf
+# Com relatório PDF
+make run pdf-file=./reports/apoema_2025.pdf
+
+# Com ambos customizados
+make run assessment-file=./data/custom.json pdf-file=./reports/report.pdf
+
+# Com prefixo customizado para os arquivos de saída
+make run prefix=analise_computacao
+
+# Combinando todos
+make run assessment-file=./data/custom.json pdf-file=./reports/report.pdf prefix=v2_analysis
 ```
 
 **Saída esperada:**

@@ -20,11 +20,12 @@ pip install uv
 
 ### 3. Install Dependencies & Create Virtual Environment
 ```bash
-# uv automatically creates .venv and installs everything
+# Install with Makefile (recommended - simplest)
+make install
+
+# Or manually with uv
 uv sync
 ```
-
-**That's it!** uv has created your virtual environment and installed all dependencies.
 
 ### 4. Configure API Key
 Get your free Google Gemini API key from [ai.google.dev](https://ai.google.dev):
@@ -44,19 +45,35 @@ set GEMINI_API_KEY=your-api-key-here
 
 ### Option A: Analyze CAPES Criteria Only
 ```bash
-uv run python main.py
+make run
 ```
 
 **Output:** `output/output_YYYYMMDDHHMMSS.md`
 
 ### Option B: Full Analysis with PDF Report
 ```bash
-uv run python main.py /path/to/report.pdf
+make run pdf-file=./path/to/report.pdf
 ```
 
 **Outputs:**
 - `output/output_YYYYMMDDHHMMSS.md` - Criteria analysis
 - `output/conformance_report_YYYYMMDDHHMMSS.md` - Conformance report
+
+### Other Makefile Options
+
+```bash
+# Custom assessment file
+make run assessment-file=custom_assessment.json
+
+# Custom output prefix
+make run prefix=my_analysis
+
+# All options together
+make run assessment-file=custom.json pdf-file=report.pdf prefix=analysis_v2
+
+# View all available commands
+make help
+```
 
 ## 📖 Next Steps
 
@@ -85,15 +102,21 @@ uv run python main.py ./reports/my-report.pdf
 ## 📊 Example Workflow
 
 ```bash
-# 1. Test basic functionality
-uv run python main.py
+# 1. Install dependencies
+make install
 
-# 2. Once working, analyze with a PDF
-uv run python main.py ./my_report.pdf
+# 2. Test basic functionality
+make run
 
-# 3. Check results
+# 3. Once working, analyze with a PDF
+make run pdf-file=./my_report.pdf
+
+# 4. Check results
 cat output/output_*.md
 cat output/conformance_report_*.md
+
+# 5. Clean up generated files
+make clean
 ```
 
 ## 💡 Tips
@@ -112,7 +135,7 @@ source .venv/bin/activate  # Linux/Mac
 # or
 .venv\Scripts\activate      # Windows
 ```
-Then run commands normally: `python main.py`
+Then run commands normally: `python main.py --pdf-file report.pdf`
 
 ### Add a New Dependency
 ```bash
@@ -123,6 +146,19 @@ uv add --dev package-name    # Development dependency
 ### Update Dependencies
 ```bash
 uv sync --upgrade  # Update all packages
+```
+
+## 💻 Using Commands Without Makefile
+
+If you prefer to skip the Makefile, you can use uv directly:
+
+```bash
+# Install
+uv sync
+
+# Run with arguments
+uv run python main.py --pdf-file ./reports/report.pdf
+uv run python main.py --assessment-file custom.json --prefix my_analysis
 ```
 
 ---
