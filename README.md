@@ -116,73 +116,70 @@ set GEMINI_API_KEY=sua-chave-aqui
 
 #### Opção A: Análise de Critérios CAPES Apenas
 
-Analisa a ficha de avaliação (Tarefas 1-2):
+Analisa a ficha de avaliação para uma grande área de estudo CAPES e extrai insights sobre os critérios (Tarefas 1-2):
 
 ```bash
 # Usando Makefile (recomendado)
-make run
+make run assessment-file=cc_assessment_data.json
 
 # Ou com uv diretamente
-uv run python main.py
+uv run python main.py --assessment-file cc_assessment_data.json
 
 # Ou com o ambiente virtual ativado
 source .venv/bin/activate  # Linux/Mac
-python main.py
+python main.py --assessment-file cc_assessment_data.json
 ```
 
 **Saída esperada:**
 ```
-Analisando assessment_data.json...
+Analisando cc_assessment_data.json...
 ✓ Data Reader processando critérios CAPES...
 ✓ Summarizer sumarizando dados...
 Execução concluída!
 ```
 
 **Arquivo gerado:**
-- `output/output_YYYYMMDDHHMMSS.md` - Sumário estruturado dos critérios
+- `output/output_YYYYMMDDHHMMSS.md` - Análise estruturada dos critérios de avaliação
 
-#### Opção B: Análise Completa com Relatório PDF
+#### Opção B: Análise Completa com Relatório PDF do APOEMA
 
-Realiza análise de critérios + análise de visualizações do relatório (Tarefas 1-5):
+Realiza análise de critérios + validação dos gráficos do relatório contra os padrões de avaliação (Tarefas 1-5):
 
 ```bash
 # Usando Makefile (recomendado)
-make run pdf-file=/caminho/para/relatorio.pdf
+make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf
 
 # Ou com uv diretamente
-uv run python main.py --pdf-file /caminho/para/relatorio.pdf
+uv run python main.py --assessment-file cc_assessment_data.json --pdf-file cc_report.pdf
 
 # Ou com o ambiente virtual ativado
 source .venv/bin/activate  # Linux/Mac
-python main.py --pdf-file /caminho/para/relatorio.pdf
+python main.py --assessment-file cc_assessment_data.json --pdf-file cc_report.pdf
 ```
 
 **Exemplos práticos:**
 ```bash
-# Análise básica
-make run
+# Análise de critérios para Computação
+make run assessment-file=cc_assessment_data.json
 
-# Com arquivo de avaliação customizado
+# Análise com arquivo customizado
 make run assessment-file=./data/custom_assessment.json
 
-# Com relatório PDF
-make run pdf-file=./reports/apoema_2025.pdf
+# Validação com relatório PDF do APOEMA
+make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf
 
-# Com ambos customizados
-make run assessment-file=./data/custom.json pdf-file=./reports/report.pdf
+# Com prefixo customizado
+make run assessment-file=cc_assessment_data.json prefix=computacao_2025
 
-# Com prefixo customizado para os arquivos de saída
-make run prefix=analise_computacao
-
-# Combinando todos
-make run assessment-file=./data/custom.json pdf-file=./reports/report.pdf prefix=v2_analysis
+# Análise completa com todos os parâmetros
+make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf prefix=analise_computacao
 ```
 
 **Saída esperada:**
 ```
-✓ Arquivo PDF carregado: relatorio.pdf
+✓ Arquivo PDF carregado: cc_report.pdf
 ✓ Tarefas de análise de relatório adicionadas ao pipeline
-Analisando assessment_data.json...
+Analisando cc_assessment_data.json...
 ✓ Data Reader processando critérios CAPES...
 ✓ Summarizer sumarizando dados...
 ✓ Report Analyzer extraindo visualizações...
@@ -192,8 +189,8 @@ Execução concluída!
 ```
 
 **Arquivos gerados:**
-- `output/output_YYYYMMDDHHMMSS.md` - Sumário de critérios
-- `output/conformance_report_YYYYMMDDHHMMSS.md` - Relatório de conformidade
+- `output/output_YYYYMMDDHHMMSS.md` - Análise dos critérios
+- `output/conformance_report_YYYYMMDDHHMMSS.md` - Relatório de conformidade com validações dos gráficos
 
 ## 📁 Estrutura do Projeto
 
@@ -428,11 +425,12 @@ Valida se o relatório do programa atende aos padrões CAPES.
 
 ## 💡 Dicas de Uso
 
-1. **Use PDFs bem estruturados** - Gráficos com títulos, legendas e eixos claros
-2. **Mantenha assessment_data.json atualizado** - Reflete critérios CAPES vigentes
-3. **Revise os prompts** - Customize para sua área de conhecimento
-4. **Preserve histórico** - Não delete arquivos em `output/` (versioning)
-5. **Teste incrementalmente** - Execute Task 1-2 antes de adicionar PDFs
+1. **assessment_data.json é obrigatório** - Define a grande área de estudo CAPES e seus critérios de avaliação
+2. **PDF é opcional** - Use para validar se o relatório de um programa atende aos padrões de avaliação
+3. **Prefix é opcional** - Padrão é timestamp; use para organizar múltiplas análises
+4. **Revise os prompts** - Customize para sua área de conhecimento específica
+5. **Preserve histórico** - Não delete arquivos em `output/` (versionamento)
+6. **Teste incrementalmente** - Execute análise de critérios antes de adicionar PDFs
 
 ## 📈 Próximas Melhorias
 

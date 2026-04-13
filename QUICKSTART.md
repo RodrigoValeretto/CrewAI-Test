@@ -41,38 +41,41 @@ $env:GEMINI_API_KEY="your-api-key-here"
 set GEMINI_API_KEY=your-api-key-here
 ```
 
-## ✅ Run APOEMA
+## ⚡ How APOEMA-CrewAI Works
 
-### Option A: Analyze CAPES Criteria Only
+APOEMA-CrewAI analyzes post-graduation programs against CAPES evaluation criteria by analyzing assessment documents and validating program reports in 2 stages:
+
+### Stage 1: Assessment Analysis (Required)
 ```bash
-make run
+make run assessment-file=cc_assessment_data.json
 ```
+- Loads the assessment criteria for your area of study in CAPES classification
+- Uses LLM to analyze and extract insights from the assessment
+- Generates structured report of evaluation criteria and expectations
+- **Output:** `output/output_YYYYMMDDHHMMSS.md`
 
-**Output:** `output/output_YYYYMMDDHHMMSS.md`
-
-### Option B: Full Analysis with PDF Report
+### Stage 2: PDF Validation (Optional)
 ```bash
-make run pdf-file=./path/to/report.pdf
+make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf
 ```
+- Takes the assessment criteria from Stage 1
+- Analyzes plots/visualizations from APOEMA-generated PDF report
+- Checks if program data meets assessment standards
+- Validates that plots are appropriate for the area of study
+- **Outputs:** 
+  - `output/output_YYYYMMDDHHMMSS.md` (assessment analysis)
+  - `output/conformance_report_YYYYMMDDHHMMSS.md` (validation results)
 
-**Outputs:**
-- `output/output_YYYYMMDDHHMMSS.md` - Criteria analysis
-- `output/conformance_report_YYYYMMDDHHMMSS.md` - Conformance report
-
-### Other Makefile Options
-
+### Custom Output Prefix (Optional)
 ```bash
-# Custom assessment file
-make run assessment-file=custom_assessment.json
+make run assessment-file=cc_assessment_data.json prefix=cc_analysis
+```
+- Changes output file prefix from timestamp to custom name
+- Useful for organizing multiple analyses
 
-# Custom output prefix
-make run prefix=my_analysis
-
-# All options together
-make run assessment-file=custom.json pdf-file=report.pdf prefix=analysis_v2
-
-# View all available commands
-make help
+### Full Example
+```bash
+make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf prefix=cc_analysis
 ```
 
 ## 📖 Next Steps
@@ -105,26 +108,28 @@ uv run python main.py ./reports/my-report.pdf
 # 1. Install dependencies
 make install
 
-# 2. Test basic functionality
-make run
+# 2. Analyze assessment data for your area of study
+make run assessment-file=cc_assessment_data.json
 
-# 3. Once working, analyze with a PDF
-make run pdf-file=./my_report.pdf
-
-# 4. Check results
+# 3. Check results
 cat output/output_*.md
+
+# 4. If you have a program report, validate it against assessment
+make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf
+
+# 5. Review conformance analysis
 cat output/conformance_report_*.md
 
-# 5. Clean up generated files
+# 6. Clean up generated files
 make clean
 ```
 
 ## 💡 Tips
 
-- **First run:** Use without PDF to ensure setup is correct
-- **Use absolute paths:** For PDF files outside the project directory
-- **Check output/:** All results are timestamped in this directory
-- **Keep assessment_data.json:** This file contains CAPES criteria
+- **assessment_data.json is required:** This defines your area of study in CAPES classification and the evaluation criteria
+- **pdf-file is optional:** Use it to validate a program's report against the assessment standards
+- **prefix is optional:** Defaults to timestamp, use it to organize multiple analyses
+- **Check output/:** All results are timestamped or prefixed in this directory
 - **uv is fast:** Dependency resolution and installation in seconds!
 
 ## 🛠️ Advanced uv Usage
