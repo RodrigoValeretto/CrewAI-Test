@@ -9,18 +9,22 @@ Get started with APOEMA in 5 minutes!
 cd crewai-test
 ```
 
-### 2. Setup Python Environment
+### 2. Install uv (Fast Dependency Manager)
 ```bash
-python -m venv .venv
-source .venv/bin/activate  # Linux/Mac
-# or
-.venv\Scripts\activate      # Windows
+# One-liner installer
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Or via pip
+pip install uv
 ```
 
-### 3. Install Dependencies
+### 3. Install Dependencies & Create Virtual Environment
 ```bash
-pip install -r requirements.txt
+# uv automatically creates .venv and installs everything
+uv sync
 ```
+
+**That's it!** uv has created your virtual environment and installed all dependencies.
 
 ### 4. Configure API Key
 Get your free Google Gemini API key from [ai.google.dev](https://ai.google.dev):
@@ -40,14 +44,14 @@ set GEMINI_API_KEY=your-api-key-here
 
 ### Option A: Analyze CAPES Criteria Only
 ```bash
-python main.py
+uv run python main.py
 ```
 
 **Output:** `output/output_YYYYMMDDHHMMSS.md`
 
 ### Option B: Full Analysis with PDF Report
 ```bash
-python main.py /path/to/report.pdf
+uv run python main.py /path/to/report.pdf
 ```
 
 **Outputs:**
@@ -69,23 +73,23 @@ echo $GEMINI_API_KEY  # Verify it's set
 
 **Module not found?**
 ```bash
-pip install crewai crewai_files google-generativeai
+uv sync  # Reinstall dependencies
 ```
 
 **PDF not found?**
 ```bash
 # Use absolute path or relative from project root
-python main.py ./reports/my-report.pdf
+uv run python main.py ./reports/my-report.pdf
 ```
 
 ## 📊 Example Workflow
 
 ```bash
 # 1. Test basic functionality
-python main.py
+uv run python main.py
 
 # 2. Once working, analyze with a PDF
-python main.py ./my_report.pdf
+uv run python main.py ./my_report.pdf
 
 # 3. Check results
 cat output/output_*.md
@@ -98,6 +102,28 @@ cat output/conformance_report_*.md
 - **Use absolute paths:** For PDF files outside the project directory
 - **Check output/:** All results are timestamped in this directory
 - **Keep assessment_data.json:** This file contains CAPES criteria
+- **uv is fast:** Dependency resolution and installation in seconds!
+
+## 🛠️ Advanced uv Usage
+
+### Activate the Virtual Environment Directly
+```bash
+source .venv/bin/activate  # Linux/Mac
+# or
+.venv\Scripts\activate      # Windows
+```
+Then run commands normally: `python main.py`
+
+### Add a New Dependency
+```bash
+uv add package-name          # Production dependency
+uv add --dev package-name    # Development dependency
+```
+
+### Update Dependencies
+```bash
+uv sync --upgrade  # Update all packages
+```
 
 ---
 

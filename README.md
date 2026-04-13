@@ -61,11 +61,12 @@ Entrada: assessment_data.json (ficha CAPES transcodificada)
 ### Pré-requisitos
 
 ```bash
-# Python 3.10+
+# Python 3.10+ (recomendado 3.13+)
 python --version
 
-# Verificar se pip está instalado
-pip --version
+# Instalar uv (gerenciador de dependências rápido)
+pip install uv
+# ou: curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 ### 1️⃣ Instalação
@@ -76,16 +77,19 @@ git clone <repository-url>
 cd crewai-test
 ```
 
-**Criar ambiente virtual (recomendado):**
+**Instalar dependências com uv:**
+```bash
+# uv cria automaticamente o ambiente virtual .venv e instala tudo
+uv sync
+```
+
+**Ou (alternativo com pip - mais lento):**
 ```bash
 python -m venv .venv
 source .venv/bin/activate  # Linux/Mac
 # ou
 .venv\Scripts\activate      # Windows
-```
 
-**Instalar dependências:**
-```bash
 pip install -r requirements.txt
 ```
 
@@ -115,6 +119,11 @@ set GEMINI_API_KEY=sua-chave-aqui
 Analisa a ficha de avaliação (Tarefas 1-2):
 
 ```bash
+# Com uv (recomendado)
+uv run python main.py
+
+# Ou com o ambiente virtual ativado
+source .venv/bin/activate  # Linux/Mac
 python main.py
 ```
 
@@ -134,6 +143,11 @@ Execução concluída!
 Realiza análise de critérios + análise de visualizações do relatório (Tarefas 1-5):
 
 ```bash
+# Com uv (recomendado)
+uv run python main.py /caminho/para/relatorio.pdf
+
+# Ou com o ambiente virtual ativado
+source .venv/bin/activate  # Linux/Mac
 python main.py /caminho/para/relatorio.pdf
 ```
 
@@ -172,10 +186,12 @@ Execução concluída!
 crewai-test/
 │
 ├── 📄 README.md                    # Este arquivo
+├── 📄 QUICKSTART.md                # Guia rápido de início
 ├── 📄 REPORT_ANALYZER_GUIDE.md     # Guia detalhado do Report Analyzer
+├── 📄 pyproject.toml               # Configuração do projeto (PEP 621)
+├── 📄 uv.lock                      # Lockfile de dependências
 ├── 📄 main.py                      # Script principal
 ├── 📄 prompt_loader.py             # Carregador de prompts
-├── 📄 requirements.txt             # Dependências Python
 ├── 📄 assessment_data.json         # Dados de avaliação CAPES (entrada)
 │
 ├── 📁 prompts/                     # Templates de prompts para agentes
