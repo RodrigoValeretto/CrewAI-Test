@@ -37,26 +37,19 @@ def load_agent_prompt(agent_name):
     }
 
 
-def load_task_prompt(task_name, assessment_data_str=None):
+def load_task_prompt(task_name):
     """
     Load task description from YAML file.
 
     Args:
         task_name: Name of the task file (without .yaml extension)
-        assessment_data_str: Optional assessment data to insert into the prompt
 
     Returns:
         Dictionary with 'description' and 'expected_output' keys
     """
     content = load_yaml_file(f"tasks/{task_name}.yaml")
 
-    description = content.get("description", "")
-    if assessment_data_str and "{ASSESSMENT_DATA}" in description:
-        description = description.replace("{ASSESSMENT_DATA}", assessment_data_str)
-
     return {
-        "description": description,
+        "description": content.get("description", ""),
         "expected_output": content.get("expected_output", ""),
     }
-
-

@@ -1,6 +1,6 @@
 import os
 from crewai import Agent, Task, Crew, Process, LLM
-from crewai_files import PDFFile
+from crewai_files import PDFFile, TextFile
 from prompt_loader import load_agent_prompt, load_task_prompt
 
 
@@ -56,12 +56,12 @@ def create_agents(llm):
     return data_reader, summarizer, report_analyzer, utility_assessor
 
 
-def create_tasks(assessment_data_str, pdf_path, output_prefix, agents):
+def create_tasks(pdf_path, output_prefix, agents):
     """Create and return all tasks."""
     data_reader, summarizer, report_analyzer, utility_assessor = agents
 
     # Task 1: Data Analysis
-    task1_config = load_task_prompt("task1_analyze", assessment_data_str)
+    task1_config = load_task_prompt("task1_analyze")
     task1 = Task(
         description=task1_config["description"],
         agent=data_reader,
@@ -127,12 +127,12 @@ def create_tasks(assessment_data_str, pdf_path, output_prefix, agents):
     return tasks
 
 
-def run_apoema_pipeline(assessment_data_str, pdf_path, output_prefix):
+def run_apoema_pipeline(assessment_file, pdf_path, output_prefix):
     """
     Execute the APOEMA assessment analysis pipeline.
 
     Args:
-        assessment_data_str: Assessment data as JSON string
+        assessment_file: Path to the assessment data JSON file
         pdf_path: Path to optional PDF file
         output_prefix: Prefix for output files
 
@@ -141,7 +141,7 @@ def run_apoema_pipeline(assessment_data_str, pdf_path, output_prefix):
     """
     llm = get_llm()
     agents = create_agents(llm)
-    input_files = {}
+    input_files = {"assessment_data": TextFile(source=assessment_file)}
 
     # Determine which agents to use
     data_reader, summarizer, report_analyzer, utility_assessor = agents
@@ -151,7 +151,7 @@ def run_apoema_pipeline(assessment_data_str, pdf_path, output_prefix):
         crew_agents.extend([report_analyzer, utility_assessor])
         input_files["report_pdf"] = PDFFile(source=pdf_path)
 
-    tasks = create_tasks(assessment_data_str, pdf_path, output_prefix, agents)
+    tasks = create_tasks(pdf_path, output_prefix, agents)
 
     crew = Crew(
         agents=crew_agents,
