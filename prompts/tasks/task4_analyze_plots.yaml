@@ -1,0 +1,62 @@
+description: |
+  1. **Interpretação de Tendências:** Utilize o catálogo JSON gerado na tarefa anterior para realizar uma análise estatística e qualitativa de cada visualização. Identifique padrões de comportamento dos dados (crescimento, estagnação, declínio ou ciclicidade).
+  2. **Cálculos de Desempenho:** Estime variações percentuais entre períodos e identifique discrepâncias (outliers) que possam indicar erros de lançamento no Sucupira ou eventos extraordinários no PPG.
+  3. **Análise de Narrativa Acadêmica:** Determine qual "história" o gráfico conta. (Ex: O gráfico de egressos mostra uma inserção social crescente ou apenas um acúmulo de titulações sem destino claro?).
+  4. **Validação Técnica e de Rigor:** Avalie se a escala e o tipo de gráfico escolhido pelo APOEMA são honestos e eficazes para representar o fenômeno acadêmico em questão.
+  5. **Geração de Insights Acionáveis:** Extraia conclusões que permitam ao coordenador do curso agir. Diferencie pontos de celebração (ex: alcance de metas de internacionalização) de áreas de risco iminente.
+  6. **Alinhamento CAPES:** Prepare a análise para que ela possa ser cruzada com os critérios da ficha de avaliação da área específica.
+
+expected_output: |
+  Um objeto JSON puro, sem textos introdutórios ou conclusivos, seguindo estritamente a estrutura abaixo para cada visualização analisada:
+
+  ```json
+  {
+    "analises_detalhadas": [
+      {
+        "id_grafico": "string",
+        "titulo_original": "string",
+        "analise_estatistica": {
+          "tendencia_principal": "crescimento|declinio|estabilidade|ciclico|misto",
+          "descricao_comportamento": "string",
+          "metricas_estimadas": {
+            "minimo": "number/string",
+            "maximo": "number/string",
+            "media_periodo": "number/string",
+            "variacao_percentual": "string"
+          },
+          "outliers_identificados": ["string"],
+          "correlacoes_observadas": "string"
+        },
+        "auditoria_qualidade": {
+          "dados_incompletos": "boolean",
+          "descricao_lacunas": "string",
+          "integridade_escala": "alta|media|baixa",
+          "recomendacoes_tecnicas": ["string"]
+        },
+        "narrativa_e_contexto": {
+          "mensagem_central": "string",
+          "implicacoes_academicas": "string",
+          "forca_da_evidencia": "alta|media|baixa"
+        },
+        "insights_estrategicos": {
+          "achados_chave": ["string"],
+          "pontos_fortes": ["string"],
+          "riscos_detectados": ["string"],
+          "oportunidades_melhoria": ["string"]
+        },
+        "proximos_passos": [
+          {
+            "categoria": "melhoria|investigacao|acao",
+            "prioridade": "alta|media|baixa",
+            "descricao": "string"
+          }
+        ]
+      }
+    ],
+    "diagnostico_global": {
+      "coerencia_do_relatorio": "string",
+      "resumo_desempenho_geral": "string",
+      "alinhamento_esperado_capes": "string"
+    }
+  }
+  ```
