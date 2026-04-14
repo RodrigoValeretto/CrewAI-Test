@@ -1,5 +1,5 @@
 description: |
-  1. **Integração de Perspectivas:** Utilize os critérios extraídos da Ficha de Avaliação e as análises das visualizações para realizar o cruzamento final de conformidade.
+  1. **Integração de Perspectivas:** Utilize os critérios extraídos da Ficha de Avaliação (task1_analyze) e as análises das visualizações (task3_extract_plots e task4_analyze_plots) para realizar o cruzamento final de conformidade.
   2. **Mapeamento de Critérios:** Para cada gráfico do APOEMA, identifique qual Quesito e Indicador específico da CAPES ele endereça. Classifique o alinhamento como Total, Parcial ou Desalinhado.
   3. **Auditoria de Cobertura:** Identifique "zonas de sombra" — critérios de alto peso na ficha que não possuem representação visual no relatório analisado.
   4. **Cálculo de Risco:** Baseado na tendência dos dados, determine o nível de risco de uma avaliação negativa (Baixo, Médio, Alto) para cada quesito.

@@ -1,5 +1,5 @@
 description: |
-  1. **Processamento de Visão e Texto:** Analise o arquivo PDF `{REPORT_PDF}` gerado pelo sistema APOEMA. Sua missão é realizar uma engenharia reversa das visualizações de dados presentes (gráficos, tabelas e plots).
+  1. **Processamento de Visão e Texto:** Analise o arquivo PDF `{report_pdf}` gerado pelo sistema APOEMA. Sua missão é realizar uma engenharia reversa das visualizações de dados presentes (gráficos, tabelas e plots).
   2. **Catalogação Técnica:** Para cada elemento visual detectado, identifique obrigatoriamente:
      - **ID e Localização:** Sequência numérica e página do documento.
      - **Tipologia e Títulos:** Classificação (barras, linhas, dispersão, pizza, tabela) e transcrição fiel de títulos/subtítulos.

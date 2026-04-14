@@ -1,5 +1,4 @@
 import os
-import json
 from crewai import Agent, Task, Crew, Process, LLM
 from crewai_files import PDFFile
 from prompt_loader import load_agent_prompt, load_task_prompt
@@ -77,6 +76,7 @@ def create_tasks(assessment_data_str, pdf_path, output_prefix, agents):
         expected_output=task2_config["expected_output"],
         markdown=True,
         output_file=f"./output/{output_prefix}_output.md",
+        context=[task1],
     )
 
     tasks = [task1, task2]
@@ -89,9 +89,6 @@ def create_tasks(assessment_data_str, pdf_path, output_prefix, agents):
             description=task3_config["description"],
             agent=report_analyzer,
             expected_output=task3_config["expected_output"],
-            input_files={
-                "pdf_report": PDFFile(source=pdf_path),
-            },
         )
 
         # Task 4: Analyze extracted plots
@@ -100,6 +97,7 @@ def create_tasks(assessment_data_str, pdf_path, output_prefix, agents):
             description=task4_config["description"],
             agent=report_analyzer,
             expected_output=task4_config["expected_output"],
+            context=[task3],
         )
 
         # Task 5: Map visualizations to CAPES criteria
@@ -110,6 +108,7 @@ def create_tasks(assessment_data_str, pdf_path, output_prefix, agents):
             expected_output=task5_config["expected_output"],
             markdown=True,
             output_file=f"./output/{output_prefix}_conformance_report.md",
+            context=[task1, task3, task4],
         )
 
         # Task 6: Assess utility and assertiveness of graphics
@@ -120,6 +119,7 @@ def create_tasks(assessment_data_str, pdf_path, output_prefix, agents):
             expected_output=task6_config["expected_output"],
             markdown=True,
             output_file=f"./output/{output_prefix}_utility_assessment.md",
+            context=[task4, task5],
         )
 
         tasks.extend([task3, task4, task5, task6])
@@ -130,34 +130,34 @@ def create_tasks(assessment_data_str, pdf_path, output_prefix, agents):
 def run_apoema_pipeline(assessment_data_str, pdf_path, output_prefix):
     """
     Execute the APOEMA assessment analysis pipeline.
-    
+
     Args:
         assessment_data_str: Assessment data as JSON string
         pdf_path: Path to optional PDF file
         output_prefix: Prefix for output files
-        
+
     Returns:
         result: The result from crew.kickoff()
     """
     llm = get_llm()
     agents = create_agents(llm)
-    
+    input_files = {}
+
     # Determine which agents to use
     data_reader, summarizer, report_analyzer, utility_assessor = agents
     crew_agents = [data_reader, summarizer]
-    
+
     if pdf_path and os.path.exists(pdf_path):
-        crew_agents.append(report_analyzer)
-        if utility_assessor not in crew_agents:
-            crew_agents.append(utility_assessor)
-    
+        crew_agents.extend([report_analyzer, utility_assessor])
+        input_files["report_pdf"] = PDFFile(source=pdf_path)
+
     tasks = create_tasks(assessment_data_str, pdf_path, output_prefix, agents)
-    
+
     crew = Crew(
         agents=crew_agents,
         tasks=tasks,
         process=Process.sequential,
     )
-    
-    result = crew.kickoff()
+
+    result = crew.kickoff(input_files=input_files)
     return result

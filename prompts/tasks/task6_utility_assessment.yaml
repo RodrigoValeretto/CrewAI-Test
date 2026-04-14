@@ -1,8 +1,9 @@
 description: |
-  1. **Avaliação Crítica de Pertinência:** Determine a utilidade prática do dashboard para a área específica. O foco é se o gráfico agrega valor estratégico para o coordenador do PPG.
-  2. **Conflito de Domínio:** Aponte se o DNA de "Ciência da Computação" do APOEMA está prejudicando a narrativa da área atual.
-  3. **Julgamento de Valor:** Atribua um Score de 1 a 10 para cada gráfico baseado em Relevância, Clareza e Poder de Decisão.
-  4. **Plano de Ação:** Consolide recomendações de "Manter", "Adaptar" ou "Substituir" de forma puramente textual.
+  Utilizando o relatório de análise de visualizações (task4_analyze_plots) e o mapeamento de critérios (task5_criteria_mapping), sua missão é realizar uma avaliação crítica da utilidade do dashboard do APOEMA para a área de conhecimento específica. O objetivo é fornecer um parecer técnico sobre a relevância estratégica dos gráficos para o coordenador do programa, considerando as exigências da ficha de avaliação da CAPES.
+    1. **Avaliação Crítica de Pertinência:** Determine a utilidade prática do dashboard para a área específica. O foco é se o gráfico agrega valor estratégico para o coordenador do PPG.
+    2. **Conflito de Domínio:** Aponte se o DNA de "Ciência da Computação" do APOEMA está prejudicando a narrativa da área atual.
+    3. **Julgamento de Valor:** Atribua um Score de 1 a 10 para cada gráfico baseado em Relevância, Clareza e Poder de Decisão.
+    4. **Plano de Ação:** Consolide recomendações de "Manter", "Adaptar" ou "Substituir" de forma puramente textual.
 
 expected_output: |
   Um relatório de assertividade em Markdown, focado em texto direto, estruturado da seguinte forma:

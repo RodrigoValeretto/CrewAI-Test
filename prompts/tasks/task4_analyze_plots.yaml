@@ -1,5 +1,5 @@
 description: |
-  1. **Interpretação de Tendências:** Utilize o catálogo JSON gerado na tarefa anterior para realizar uma análise estatística e qualitativa de cada visualização. Identifique padrões de comportamento dos dados (crescimento, estagnação, declínio ou ciclicidade).
+  1. **Interpretação de Tendências:** Utilize o catálogo JSON gerado na tarefa anterior (task3_extract_plots) para realizar uma análise estatística e qualitativa de cada visualização. Identifique padrões de comportamento dos dados (crescimento, estagnação, declínio ou ciclicidade).
   2. **Cálculos de Desempenho:** Estime variações percentuais entre períodos e identifique discrepâncias (outliers) que possam indicar erros de lançamento no Sucupira ou eventos extraordinários no PPG.
   3. **Análise de Narrativa Acadêmica:** Determine qual "história" o gráfico conta. (Ex: O gráfico de egressos mostra uma inserção social crescente ou apenas um acúmulo de titulações sem destino claro?).
   4. **Validação Técnica e de Rigor:** Avalie se a escala e o tipo de gráfico escolhido pelo APOEMA são honestos e eficazes para representar o fenômeno acadêmico em questão.
