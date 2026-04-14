@@ -1,6 +1,5 @@
 """Utility module for loading prompt templates from YAML files."""
 
-import os
 from pathlib import Path
 import yaml
 
@@ -27,7 +26,7 @@ def load_yaml_file(yaml_path):
         raise ValueError(f"Error parsing YAML file {file_path}: {e}")
 
 
-def load_agent_prompt_yaml(agent_name):
+def load_agent_prompt(agent_name):
     """Load agent configuration (role, goal, backstory) from YAML file."""
     content = load_yaml_file(f"agents/{agent_name}.yaml")
 
@@ -38,7 +37,7 @@ def load_agent_prompt_yaml(agent_name):
     }
 
 
-def load_task_prompt_yaml(task_name, assessment_data_str=None):
+def load_task_prompt(task_name, assessment_data_str=None):
     """
     Load task description from YAML file.
 
@@ -59,6 +58,5 @@ def load_task_prompt_yaml(task_name, assessment_data_str=None):
         "description": description,
         "expected_output": content.get("expected_output", ""),
     }
-
 
 

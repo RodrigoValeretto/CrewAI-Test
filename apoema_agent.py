@@ -2,7 +2,7 @@ import os
 import json
 from crewai import Agent, Task, Crew, Process, LLM
 from crewai_files import PDFFile
-from prompt_loader import load_agent_prompt_yaml, load_task_prompt_yaml
+from prompt_loader import load_agent_prompt, load_task_prompt
 
 
 # Initialize LLM configuration
@@ -18,7 +18,7 @@ def get_llm():
 
 def create_agents(llm):
     """Create and return all agents."""
-    data_reader_config = load_agent_prompt_yaml("data_reader")
+    data_reader_config = load_agent_prompt("data_reader")
     data_reader = Agent(
         role=data_reader_config["Role"],
         goal=data_reader_config["Goal"],
@@ -27,7 +27,7 @@ def create_agents(llm):
         verbose=True,
     )
 
-    summarizer_config = load_agent_prompt_yaml("summarizer")
+    summarizer_config = load_agent_prompt("summarizer")
     summarizer = Agent(
         role=summarizer_config["Role"],
         goal=summarizer_config["Goal"],
@@ -36,7 +36,7 @@ def create_agents(llm):
         verbose=True,
     )
 
-    report_analyzer_config = load_agent_prompt_yaml("report_analyzer")
+    report_analyzer_config = load_agent_prompt("report_analyzer")
     report_analyzer = Agent(
         role=report_analyzer_config["Role"],
         goal=report_analyzer_config["Goal"],
@@ -45,7 +45,7 @@ def create_agents(llm):
         verbose=True,
     )
 
-    utility_assessor_config = load_agent_prompt_yaml("utility_assessor")
+    utility_assessor_config = load_agent_prompt("utility_assessor")
     utility_assessor = Agent(
         role=utility_assessor_config["Role"],
         goal=utility_assessor_config["Goal"],
@@ -62,7 +62,7 @@ def create_tasks(assessment_data_str, pdf_path, output_prefix, agents):
     data_reader, summarizer, report_analyzer, utility_assessor = agents
 
     # Task 1: Data Analysis
-    task1_config = load_task_prompt_yaml("task1_analyze", assessment_data_str)
+    task1_config = load_task_prompt("task1_analyze", assessment_data_str)
     task1 = Task(
         description=task1_config["description"],
         agent=data_reader,
@@ -70,7 +70,7 @@ def create_tasks(assessment_data_str, pdf_path, output_prefix, agents):
     )
 
     # Task 2: Summarization
-    task2_config = load_task_prompt_yaml("task2_summarize")
+    task2_config = load_task_prompt("task2_summarize")
     task2 = Task(
         description=task2_config["description"],
         agent=summarizer,
@@ -84,7 +84,7 @@ def create_tasks(assessment_data_str, pdf_path, output_prefix, agents):
     # Optional Tasks 3-6: Report Analysis (requires PDF file)
     if pdf_path and os.path.exists(pdf_path):
         # Task 3: Extract plots from PDF
-        task3_config = load_task_prompt_yaml("task3_extract_plots")
+        task3_config = load_task_prompt("task3_extract_plots")
         task3 = Task(
             description=task3_config["description"],
             agent=report_analyzer,
@@ -95,7 +95,7 @@ def create_tasks(assessment_data_str, pdf_path, output_prefix, agents):
         )
 
         # Task 4: Analyze extracted plots
-        task4_config = load_task_prompt_yaml("task4_analyze_plots")
+        task4_config = load_task_prompt("task4_analyze_plots")
         task4 = Task(
             description=task4_config["description"],
             agent=report_analyzer,
@@ -103,7 +103,7 @@ def create_tasks(assessment_data_str, pdf_path, output_prefix, agents):
         )
 
         # Task 5: Map visualizations to CAPES criteria
-        task5_config = load_task_prompt_yaml("task5_criteria_mapping")
+        task5_config = load_task_prompt("task5_criteria_mapping")
         task5 = Task(
             description=task5_config["description"],
             agent=report_analyzer,
@@ -113,7 +113,7 @@ def create_tasks(assessment_data_str, pdf_path, output_prefix, agents):
         )
 
         # Task 6: Assess utility and assertiveness of graphics
-        task6_config = load_task_prompt_yaml("task6_utility_assessment")
+        task6_config = load_task_prompt("task6_utility_assessment")
         task6 = Task(
             description=task6_config["description"],
             agent=utility_assessor,
