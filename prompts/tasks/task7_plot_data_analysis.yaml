@@ -1,0 +1,59 @@
+description: |
+  Baseado na imagem PNG {plot_image} de um gráfico/visualização e no arquivo CSV {plot_data} correspondente com os dados subjacentes. Sua tarefa é realizar uma análise técnica e estruturada, combinando interpretação visual com análise estatística dos dados.
+
+  1. **Interpretação Visual:** Analise a imagem PNG para entender o tipo de gráfico, layout, cores, escalas, eixos e mensagem visual principal que o gráfico comunica.
+  
+  2. **Análise dos Dados CSV:** Examine os dados brutos do CSV para validar o que é mostrado no gráfico, identificar padrões, tendências e anomalias.
+  
+  3. **Análise Estatística e de Tendências:** Identifique padrões de comportamento dos dados (crescimento, estagnação, declínio ou ciclicidade). Estime variações percentuais entre períodos. Identifique outliers e correlações.
+  
+  4. **Auditoria de Qualidade:** Valide se a escala, o tipo de gráfico e a representação visual são honestos e eficazes. Identifique dados incompletos, lacunas ou problemas de integridade.
+  
+  5. **Congruência Visual-Dados:** Determine se o que é mostrado visualmente no gráfico é fiel aos dados do CSV. Identifique qualquer discrepância ou manipulação visual.
+
+expected_output: |
+  Um objeto JSON puro, sem textos introdutórios ou conclusivos, seguindo estritamente a estrutura abaixo:
+
+  ```json
+  {
+    "analise_tecnica": {
+      "id_grafico": "string (identificador único)",
+      "titulo_original": "string",
+      "tipo_visualizacao": "string (ex: linha, barra, dispersao, pizza, area, etc.)",
+      "descricao_visual": "string (descrição técnica do que é mostrado)",
+      "eixos": {
+        "eixo_x": "string",
+        "eixo_y": "string",
+        "unidades": "string"
+      },
+      "periodo_temporal": "string",
+      "analise_dados": {
+        "tendencia_principal": "crescimento|declinio|estabilidade|ciclico|misto",
+        "descricao_comportamento": "string",
+        "metricas_estimadas": {
+          "minimo": "number|string",
+          "maximo": "number|string",
+          "media": "number|string",
+          "desvio_padrao": "number|string",
+          "variacao_percentual": "string"
+        },
+        "outliers_identificados": ["string"],
+        "correlacoes_observadas": "string"
+      },
+      "auditoria_qualidade": {
+        "dados_incompletos": "boolean",
+        "descricao_lacunas": "string",
+        "integridade_escala": "alta|media|baixa",
+        "congruencia_visual_dados": "alta|media|baixa",
+        "problemas_detectados": ["string"],
+        "recomendacoes_tecnicas": ["string"]
+      },
+      "metadados_csv": {
+        "colunas_identificadas": ["string"],
+        "quantidade_registros": "number|string",
+        "tipos_dados": ["string"],
+        "validacao_formato": "string"
+      }
+    }
+  }
+  ```

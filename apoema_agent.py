@@ -1,6 +1,6 @@
 import os
 from crewai import Agent, Task, Crew, Process, LLM
-from crewai_files import PDFFile, TextFile
+from crewai_files import PDFFile, TextFile, ImageFile
 from prompt_loader import load_agent_prompt, load_task_prompt
 
 
@@ -56,7 +56,7 @@ def create_agents(llm):
     return data_reader, summarizer, report_analyzer, utility_assessor
 
 
-def create_tasks(pdf_path, output_prefix, agents):
+def create_tasks(pdf_path, output_prefix, agents, png_path=None, csv_path=None):
     """Create and return all tasks."""
     data_reader, summarizer, report_analyzer, utility_assessor = agents
 
@@ -124,10 +124,44 @@ def create_tasks(pdf_path, output_prefix, agents):
 
         tasks.extend([task3, task4, task5, task6])
 
+    # Optional Tasks 7-9: PNG + CSV Plot Analysis (alternative to PDF)
+    elif png_path and os.path.exists(png_path) and csv_path and os.path.exists(csv_path):
+        # Task 7: Analyze PNG image and CSV data
+        task7_config = load_task_prompt("task7_plot_data_analysis")
+        task7 = Task(
+            description=task7_config["description"],
+            agent=report_analyzer,
+            expected_output=task7_config["expected_output"],
+        )
+
+        # Task 8: Generate insights and narrative from analysis
+        task8_config = load_task_prompt("task8_plot_insights")
+        task8 = Task(
+            description=task8_config["description"],
+            agent=report_analyzer,
+            expected_output=task8_config["expected_output"],
+            markdown=True,
+            output_file=f"./output/{output_prefix}_plot_insights.md",
+            context=[task1, task2, task7],
+        )
+
+        # Task 9: Assess utility and importance of the plot
+        task9_config = load_task_prompt("task9_plot_utility_importance")
+        task9 = Task(
+            description=task9_config["description"],
+            agent=utility_assessor,
+            expected_output=task9_config["expected_output"],
+            markdown=True,
+            output_file=f"./output/{output_prefix}_plot_importance.md",
+            context=[task1, task2, task7, task8],
+        )
+
+        tasks.extend([task7, task8, task9])
+
     return tasks
 
 
-def run_apoema_pipeline(assessment_file, pdf_path, output_prefix):
+def run_apoema_pipeline(assessment_file, pdf_path, output_prefix, png_path=None, csv_path=None):
     """
     Execute the APOEMA assessment analysis pipeline.
 
@@ -135,6 +169,8 @@ def run_apoema_pipeline(assessment_file, pdf_path, output_prefix):
         assessment_file: Path to the assessment data JSON file
         pdf_path: Path to optional PDF file
         output_prefix: Prefix for output files
+        png_path: Path to optional PNG plot image file
+        csv_path: Path to optional CSV data file
 
     Returns:
         result: The result from crew.kickoff()
@@ -150,8 +186,12 @@ def run_apoema_pipeline(assessment_file, pdf_path, output_prefix):
     if pdf_path and os.path.exists(pdf_path):
         crew_agents.extend([report_analyzer, utility_assessor])
         input_files["report_pdf"] = PDFFile(source=pdf_path)
+    elif png_path and os.path.exists(png_path) and csv_path and os.path.exists(csv_path):
+        crew_agents.extend([report_analyzer, utility_assessor])
+        input_files["plot_image"] = ImageFile(source=png_path)
+        input_files["plot_data"] = TextFile(source=csv_path)
 
-    tasks = create_tasks(pdf_path, output_prefix, agents)
+    tasks = create_tasks(pdf_path, output_prefix, agents, png_path, csv_path)
 
     crew = Crew(
         agents=crew_agents,

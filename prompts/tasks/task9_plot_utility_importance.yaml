@@ -1,0 +1,56 @@
+description: |
+  Utilizando o relatório de insights do gráfico (task8_plot_insights), sua missão é realizar uma avaliação crítica da utilidade e importância deste gráfico específico para o programa de pós-graduação na área de conhecimento determinada juntamente com os dados pertinentes nas tasks task01_analyze e task02_summarize.
+
+  1. **Avaliação Crítica de Pertinência:** Determine a utilidade prática do gráfico para a área específica. O foco é se o gráfico agrega valor estratégico e informativo para o coordenador do PPG.
+  
+  2. **Relevância para CAPES:** Avalie se este gráfico aborda critérios críticos da ficha de avaliação da CAPES para a área em questão. Questione se o DNA original do gráfico (possivelmente de Ciência da Computação) é prejudicial ou benéfico para a narrativa da área atual.
+  
+  3. **Julgamento de Valor:** Atribua um Score de 1 a 10 para o gráfico baseado em:
+     - **Relevância:** Quão importante é este dado para a avaliação da área?
+     - **Clareza:** Quão bem a visualização comunica a informação?
+     - **Poder de Decisão:** Quanto este gráfico influencia decisões estratégicas?
+  
+  4. **Classificação de Importância:** Classifique o gráfico como Essencial, Importante, Útil, Marginal ou Irrelevante para a área.
+  
+  5. **Recomendação de Ação:** Formule uma recomendação clara: Manter, Adaptar ou Substituir.
+
+expected_output: |
+  Um relatório de importância e utilidade em Markdown, focado em texto direto, estruturado da seguinte forma:
+
+  ### ⚡ Avaliação de Importância: [Título do Gráfico]
+
+  * **Score de Importância:** [1-10]
+  * **Classificação:** [Essencial / Importante / Útil / Marginal / Irrelevante]
+  * **Recomendação:** [Manter / Adaptar / Substituir]
+
+  ### 1. Análise de Relevância para a Área
+
+  [Parágrafo explicando como este gráfico é relevante (ou não) para a área de avaliação específica fornecida em assessment_data. Considere os critérios e necessidades da área.]
+
+  ### 2. Alinhamento com Critérios CAPES
+
+  [Parágrafo identificando quais critérios específicos da ficha de avaliação são cobertos por este gráfico. Aponte lacunas se existirem.]
+
+  ### 3. Utilidade Estratégica para o Coordenador
+
+  [Parágrafo sobre a utilidade prática do gráfico para tomada de decisão. Qual coordenador se beneficia mais? Em que situações este gráfico é acionável?]
+
+  ### 4. Análise de Compatibilidade: Domínio APOEMA vs. Área Avaliada
+
+  [Parágrafo analisando se o DNA original do gráfico (desenvolvido para Ciência da Computação) é prejudicial ou neutro/benéfico para a interpretação em outras áreas. Identifique possíveis conflitos semânticos ou de domínio.]
+
+  ### 5. Justificativa da Recomendação
+
+  * Se **Manter:** Por que este gráfico deve permanecer no dashboard para esta área?
+  * Se **Adaptar:** Que mudanças específicas melhorariam sua utilidade?
+  * Se **Substituir:** Qual tipo de visualização seria mais apropriado? Por quê?
+
+  ### 6. Público Beneficiado
+
+  [Descrição de quem mais se beneficia deste gráfico: coordenador, docentes, alunos, avaliadores CAPES, etc.]
+
+  ### 7. Impacto Estimado
+
+  [Análise em texto do impacto potencial desta visualização na avaliação ou gestão do programa]
+
+  **Instrução de Formato:** Retorne APENAS o relatório em Markdown. Proibido o uso de tabelas (|---|) ou blocos de código. Use listas e indentação para organizar dados.

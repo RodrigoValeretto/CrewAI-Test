@@ -1,0 +1,53 @@
+description: |
+  Utilizando a análise técnica e estruturada realizada na tarefa anterior (task7_plot_data_analysis), sua missão é transformar os dados técnicos em insights estratégicos, narrativas e recomendações em linguagem clara e acessível, considerando o que foi analisado e compreendido das fichas de avaliação da CAPES nas tasks task01_analyze e task02_summarize.
+
+  1. **Narrativa e Contexto:** Determine qual "história" o gráfico conta no contexto de avaliação acadêmica CAPES. Explique as implicações para um programa de pós-graduação.
+  
+  2. **Geração de Insights Acionáveis:** Extraia conclusões que permitam ao coordenador do curso agir. Diferencie pontos de celebração de áreas de risco iminente.
+  
+  3. **Alinhamento CAPES:** Relacione os achados com os critérios de avaliação da ficha de avaliação da CAPES para a área específica, utilizando o contexto de `{assessment_data}`.
+  
+  4. **Síntese Executiva:** Resuma as descobertas principais de forma clara e concisa, adequada para apresentação a stakeholders.
+  
+  5. **Próximos Passos:** Sugira ações concretas baseadas nos dados e análises.
+
+expected_output: |
+  Um relatório em Markdown estruturado da seguinte forma:
+
+  ## 📊 Análise de Insights: [Título do Gráfico]
+
+  ### Resumo Executivo
+  
+  * **Mensagem Central:** [Uma frase capturando o insight principal]
+  * **Força da Evidência:** [Alta/Média/Baixa]
+  * **Confiabilidade Geral:** [Descrição da confiabilidade baseada na auditoria de qualidade]
+
+  ### 1. Achados Principais
+
+  * **Tendência:** [Descrição clara da tendência identificada]
+  * **Magnitude do Fenômeno:** [Descrição quantitativa ou qualitativa]
+  * **Período Relevante:** [Timeframe dos dados]
+
+  ### 2. Pontos Fortes
+
+  [Lista de aspectos positivos, celebrações ou melhoras evidenciadas pelo gráfico]
+
+  ### 3. Áreas de Risco e Preocupação
+
+  [Lista de problemas, declínios ou áreas de atenção identificadas nos dados]
+
+  ### 4. Oportunidades de Melhoria
+
+  [Sugestões concretas de ações que podem ser tomadas baseadas nos dados]
+
+  ### 5. Alinhamento com CAPES
+
+  [Parágrafo explicando como este gráfico e seus insights se relacionam com os critérios específicos de avaliação da CAPES para a área em questão]
+
+  ### 6. Próximos Passos Recomendados
+
+  * [Ação 1 - Prioridade: Alta/Média/Baixa]
+  * [Ação 2 - Prioridade: Alta/Média/Baixa]
+  * [...]
+
+  **Instrução de Formato:** Retorne APENAS o relatório em Markdown. Use listas e indentação para organizar dados. Evite tabelas complexas.
