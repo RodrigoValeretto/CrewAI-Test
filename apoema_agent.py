@@ -53,12 +53,30 @@ def create_agents(llm):
         verbose=True,
     )
 
-    return data_reader, summarizer, report_analyzer, utility_assessor
+    plot_data_analyst_config = load_agent_prompt("plot_data_analyst")
+    plot_data_analyst = Agent(
+        role=plot_data_analyst_config["Role"],
+        goal=plot_data_analyst_config["Goal"],
+        backstory=plot_data_analyst_config["Backstory"],
+        llm=llm,
+        verbose=True,
+    )
+
+    plot_insights_generator_config = load_agent_prompt("plot_insights_generator")
+    plot_insights_generator = Agent(
+        role=plot_insights_generator_config["Role"],
+        goal=plot_insights_generator_config["Goal"],
+        backstory=plot_insights_generator_config["Backstory"],
+        llm=llm,
+        verbose=True,
+    )
+
+    return data_reader, summarizer, report_analyzer, utility_assessor, plot_data_analyst, plot_insights_generator
 
 
 def create_tasks(pdf_path, output_prefix, agents, png_path=None, csv_path=None):
     """Create and return all tasks."""
-    data_reader, summarizer, report_analyzer, utility_assessor = agents
+    data_reader, summarizer, report_analyzer, utility_assessor, plot_data_analyst, plot_insights_generator = agents
 
     # Task 1: Data Analysis
     task1_config = load_task_prompt("task1_analyze")
@@ -130,7 +148,7 @@ def create_tasks(pdf_path, output_prefix, agents, png_path=None, csv_path=None):
         task7_config = load_task_prompt("task7_plot_data_analysis")
         task7 = Task(
             description=task7_config["description"],
-            agent=report_analyzer,
+            agent=plot_data_analyst,
             expected_output=task7_config["expected_output"],
         )
 
@@ -138,7 +156,7 @@ def create_tasks(pdf_path, output_prefix, agents, png_path=None, csv_path=None):
         task8_config = load_task_prompt("task8_plot_insights")
         task8 = Task(
             description=task8_config["description"],
-            agent=report_analyzer,
+            agent=plot_insights_generator,
             expected_output=task8_config["expected_output"],
             markdown=True,
             output_file=f"./output/{output_prefix}_plot_insights.md",
@@ -180,14 +198,14 @@ def run_apoema_pipeline(assessment_file, pdf_path, output_prefix, png_path=None,
     input_files = {"assessment_data": TextFile(source=assessment_file)}
 
     # Determine which agents to use
-    data_reader, summarizer, report_analyzer, utility_assessor = agents
+    data_reader, summarizer, report_analyzer, utility_assessor, plot_data_analyst, plot_insights_generator = agents
     crew_agents = [data_reader, summarizer]
 
     if pdf_path and os.path.exists(pdf_path):
         crew_agents.extend([report_analyzer, utility_assessor])
         input_files["report_pdf"] = PDFFile(source=pdf_path)
     elif png_path and os.path.exists(png_path) and csv_path and os.path.exists(csv_path):
-        crew_agents.extend([report_analyzer, utility_assessor])
+        crew_agents.extend([plot_data_analyst, plot_insights_generator, utility_assessor])
         input_files["plot_image"] = ImageFile(source=png_path)
         input_files["plot_data"] = TextFile(source=csv_path)
 
