@@ -4,23 +4,23 @@
 help:
 	@echo "APOEMA - Available commands:"
 	@echo ""
-	@echo "  make install                          Install dependencies (uv sync)"
-	@echo "  make run                              Run APOEMA with default settings"
-	@echo "  make run assessment-file=<path>       Specify custom assessment JSON file"
-	@echo "  make run pdf-file=<path>              Specify PDF report file"
-	@echo "  make run prefix=<string>              Specify custom prefix for output files"
-	@echo "  make run assessment-file=<path> pdf-file=<path> prefix=<string>"
-	@echo "                                        Use multiple custom options"
-	@echo "  make help                             Show this help message"
-	@echo "  make clean                            Clean generated output and cache"
+	@echo "  make install                                   Install dependencies (uv sync)"
+	@echo "  make run assessment-file=<path>               Run APOEMA (assessment analysis only)"
+	@echo "  make run assessment-file=<path> pdf-file=<path>"
+	@echo "                                                 Run with PDF plot analysis"
+	@echo "  make run assessment-file=<path> png-file=<path> csv-file=<path>"
+	@echo "                                                 Run with PNG+CSV plot analysis"
+	@echo "  make run prefix=<string>                       Specify custom prefix for output files"
+	@echo "  make help                                      Show this help message"
+	@echo "  make clean                                     Clean generated output and cache"
 	@echo ""
 	@echo "Examples:"
 	@echo "  make install"
-	@echo "  make run"
-	@echo "  make run assessment-file=custom_assessment.json"
-	@echo "  make run pdf-file=./reports/report.pdf"
-	@echo "  make run prefix=my_analysis"
-	@echo "  make run assessment-file=custom.json pdf-file=report.pdf prefix=analysis_v2"
+	@echo "  make run assessment-file=cc_assessment_data.json"
+	@echo "  make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf"
+	@echo "  make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv"
+	@echo "  make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf prefix=cc_analysis"
+	@echo "  make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv prefix=plot_analysis"
 
 # Install dependencies using uv
 install:
@@ -33,6 +33,8 @@ run:
 	@uv run python main.py \
 		$(if $(assessment-file),--assessment-file $(assessment-file)) \
 		$(if $(pdf-file),--pdf-file $(pdf-file)) \
+		$(if $(png-file),--png-file $(png-file)) \
+		$(if $(csv-file),--csv-file $(csv-file)) \
 		$(if $(prefix),--prefix $(prefix))
 
 # Clean generated files
