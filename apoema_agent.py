@@ -71,12 +71,26 @@ def create_agents(llm):
         verbose=True,
     )
 
-    return data_reader, summarizer, report_analyzer, utility_assessor, plot_data_analyst, plot_insights_generator
+    return (
+        data_reader,
+        summarizer,
+        report_analyzer,
+        utility_assessor,
+        plot_data_analyst,
+        plot_insights_generator,
+    )
 
 
 def create_tasks(pdf_path, output_prefix, agents, png_path=None, csv_path=None):
     """Create and return all tasks."""
-    data_reader, summarizer, report_analyzer, utility_assessor, plot_data_analyst, plot_insights_generator = agents
+    (
+        data_reader,
+        summarizer,
+        report_analyzer,
+        utility_assessor,
+        plot_data_analyst,
+        plot_insights_generator,
+    ) = agents
 
     # Task 1: Data Analysis
     task1_config = load_task_prompt("task1_analyze")
@@ -198,7 +212,14 @@ def run_apoema_pipeline(assessment_file, pdf_path, output_prefix, png_path=None,
     input_files = {"assessment_data": TextFile(source=assessment_file)}
 
     # Determine which agents to use
-    data_reader, summarizer, report_analyzer, utility_assessor, plot_data_analyst, plot_insights_generator = agents
+    (
+        data_reader,
+        summarizer,
+        report_analyzer,
+        utility_assessor,
+        plot_data_analyst,
+        plot_insights_generator,
+    ) = agents
     crew_agents = [data_reader, summarizer]
 
     if pdf_path and os.path.exists(pdf_path):
