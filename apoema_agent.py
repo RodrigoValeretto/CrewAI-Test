@@ -1,18 +1,39 @@
 import os
+import base64
+from pathlib import Path
 from crewai import Agent, Task, Crew, Process, LLM
 from crewai_files import PDFFile, TextFile, ImageFile
 from prompt_loader import load_agent_prompt, load_task_prompt
 
 
+LLM_MODEL = "OLLAMA-GEMMA4"  # Change to "GEMINI" to use Gemini model
+
+
 # Initialize LLM configuration
 def get_llm():
     """Create and return the LLM instance."""
-    gemini_api_key = os.getenv("GEMINI_API_KEY")
-    return LLM(
-        model="gemini/gemini-2.5-flash",
-        api_key=gemini_api_key,
-        temperature=0.7,
-    )
+    match LLM_MODEL:
+        case "GEMINI":
+            gemini_api_key = os.getenv("GEMINI_API_KEY")
+            return LLM(
+                model="gemini/gemini-2.5-flash",
+                api_key=gemini_api_key,
+                temperature=0.7,
+            )
+        case "OLLAMA-GEMMA4":
+            return LLM(
+                model="ollama/gemma4:latest",
+                base_url="http://localhost:11434",
+                temperature=0.7,
+            )
+
+    raise ValueError(f"Unsupported LLM_MODEL: {LLM_MODEL}")
+
+
+def encode_image_to_base64(image_path: str) -> str:
+    """Encode image file to base64 string."""
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode("utf-8")
 
 
 def create_agents(llm):
