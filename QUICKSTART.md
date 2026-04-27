@@ -43,7 +43,7 @@ set GEMINI_API_KEY=your-api-key-here
 
 ## ⚡ How APOEMA-CrewAI Works
 
-APOEMA-CrewAI analyzes post-graduation programs against CAPES evaluation criteria by analyzing assessment documents and validating program reports in 2 stages:
+APOEMA-CrewAI analyzes post-graduation programs against CAPES evaluation criteria by analyzing assessment documents and validating program reports in 2 or 3 stages:
 
 ### Stage 1: Assessment Analysis (Required)
 ```bash
@@ -54,7 +54,7 @@ make run assessment-file=cc_assessment_data.json
 - Generates structured report of evaluation criteria and expectations
 - **Output:** `output/output_YYYYMMDDHHMMSS.md`
 
-### Stage 2: PDF Validation (Optional)
+### Stage 2A: PDF Validation (Optional - Alternative 1)
 ```bash
 make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf
 ```
@@ -65,6 +65,20 @@ make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf
 - **Outputs:** 
   - `output/output_YYYYMMDDHHMMSS.md` (assessment analysis)
   - `output/conformance_report_YYYYMMDDHHMMSS.md` (validation results)
+  - `output/utility_assessment_YYYYMMDDHHMMSS.md` (plot utility analysis)
+
+### Stage 2B: PNG+CSV Analysis (Optional - Alternative 2)
+```bash
+make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv
+```
+- Takes the assessment criteria from Stage 1
+- Analyzes a PNG plot image with corresponding CSV data
+- Extracts technical metrics and statistical insights
+- Validates relevance to the evaluation area and CAPES criteria
+- **Outputs:**
+  - `output/output_YYYYMMDDHHMMSS.md` (assessment analysis)
+  - `output/plot_insights_YYYYMMDDHHMMSS.md` (plot analysis and insights)
+  - `output/plot_importance_YYYYMMDDHHMMSS.md` (relevance assessment)
 
 ### Custom Output Prefix (Optional)
 ```bash
@@ -73,9 +87,19 @@ make run assessment-file=cc_assessment_data.json prefix=cc_analysis
 - Changes output file prefix from timestamp to custom name
 - Useful for organizing multiple analyses
 
-### Full Example
+### Examples
 ```bash
+# Assessment analysis only
+make run assessment-file=cc_assessment_data.json
+
+# With PDF report validation
 make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf prefix=cc_analysis
+
+# With PNG plot and CSV data analysis
+make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv prefix=plot_analysis
+
+# Full example with all parameters
+make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv prefix=my_analysis
 ```
 
 ## 📖 Next Steps
@@ -114,11 +138,15 @@ make run assessment-file=cc_assessment_data.json
 # 3. Check results
 cat output/output_*.md
 
-# 4. If you have a program report, validate it against assessment
+# 4A. If you have a program report, validate it against assessment
 make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf
 
-# 5. Review conformance analysis
-cat output/conformance_report_*.md
+# 4B. OR if you have a PNG plot with CSV data
+make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv
+
+# 5. Review analysis results
+cat output/conformance_report_*.md  # For PDF analysis
+cat output/plot_insights_*.md       # For PNG+CSV analysis
 
 # 6. Clean up generated files
 make clean
@@ -127,8 +155,10 @@ make clean
 ## 💡 Tips
 
 - **assessment_data.json is required:** This defines your area of study in CAPES classification and the evaluation criteria
-- **pdf-file is optional:** Use it to validate a program's report against the assessment standards
+- **pdf-file is optional:** Use it to validate a program's PDF report against the assessment standards
+- **png-file and csv-file are optional:** Use them together to analyze a specific plot with its underlying data (alternative to PDF)
 - **prefix is optional:** Defaults to timestamp, use it to organize multiple analyses
+- **PDF and PNG+CSV are alternatives:** Provide either PDF OR (PNG + CSV), not both
 - **Check output/:** All results are timestamped or prefixed in this directory
 - **uv is fast:** Dependency resolution and installation in seconds!
 

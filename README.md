@@ -23,37 +23,55 @@ Programas de pós-graduação brasileiros precisam se alinhar com critérios com
 
 ## 🏗️ Arquitetura do Sistema
 
-### 3 Agentes IA Especializados
+### 5 Agentes IA Especializados
 
-```
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│  DATA READER    │ --> │   SUMMARIZER     │ --> │ REPORT ANALYZER │
-│                 │     │                  │     │                 │
-│ Extrai/Estrutura│     │  Sumariza        │     │ Analisa gráficos│
-│ Critérios CAPES │     │  Critérios       │     │ e Valida CAPES  │
-└─────────────────┘     └──────────────────┘     └─────────────────┘
-      Input:                  Input:                  Input:
-  assessment_data.json    Critérios (Task1)      PDF do Relatório
-      (JSON)                 Output: MD             Output: JSON+MD
-```
+**Agentes Base (todos os fluxos):**
+- **Data Reader**: Extrai e estrutura critérios CAPES
+- **Summarizer**: Sumariza os critérios em formato legível
 
-### Fluxo de Processamento
+**Agentes para Análise de Relatórios PDF:**
+- **Report Analyzer**: Analisa múltiplos gráficos de relatórios PDF
 
+**Agentes para Análise PNG+CSV (Novo):**
+- **Plot Data Analyst**: Análise técnica integrada de PNG + CSV → JSON estruturado
+- **Plot Insights Generator**: Transforma análise técnica em insights estratégicos
+
+**Agente Compartilhado:**
+- **Utility Assessor**: Avalia importância/relevância para a área (em ambos os fluxos)
+
+### Fluxos de Processamento
+
+#### Fluxo 1: Análise de Critérios CAPES (Obrigatório)
 ```
-Entrada: assessment_data.json (ficha CAPES transcodificada)
-   ↓
+Entrada: assessment_data.json
+  ↓
 [TASK 1] Data Reader: Analisa estrutura de critérios
-   ↓ Output: JSON com quesitos/pesos/indicadores
+  ↓ Output: JSON com quesitos/pesos/indicadores
 [TASK 2] Summarizer: Sumariza critérios em markdown
-   ↓ Output: Sumário legível (output_TIMESTAMP.md)
-[TASK 3-5] Report Analyzer (Opcional - requer PDF)
-   ↓
-[TASK 3] Extract Plots: Cataloga visualizações do PDF
-   ↓ Output: JSON com metadados dos gráficos
-[TASK 4] Analyze Plots: Extrai insights dos dados
-   ↓ Output: JSON com análises detalhadas
-[TASK 5] Criteria Mapping: Valida alinhamento CAPES
-   ↓ Output: JSON + Markdown com conformidade
+  ↓ Output: {prefix}_output.md
+```
+
+#### Fluxo 2A: Análise de Relatório PDF (Opcional)
+```
+Entrada: PDF do Relatório
+  ↓
+[TASK 3] Report Analyzer: Extrai visualizações
+[TASK 4] Report Analyzer: Analisa gráficos
+[TASK 5] Report Analyzer: Mapeia critérios CAPES
+[TASK 6] Utility Assessor: Avalia utilidade dos gráficos
+  ↓ Outputs: conformance_report_*.md, utility_assessment_*.md
+```
+
+#### Fluxo 2B: Análise PNG+CSV (Novo - Alternativa ao PDF)
+```
+Entrada: PNG plot + CSV data
+  ↓
+[TASK 7] Plot Data Analyst: Análise técnica integrada
+  ↓ Output: JSON estruturado com métricas técnicas
+[TASK 8] Plot Insights Generator: Gera insights e narrativa
+  ↓ Output: {prefix}_plot_insights.md
+[TASK 9] Utility Assessor: Avalia importância para a área
+  ↓ Output: {prefix}_plot_importance.md
 ```
 
 ## 🚀 Como Usar
@@ -143,7 +161,7 @@ Execução concluída!
 
 #### Opção B: Análise Completa com Relatório PDF do APOEMA
 
-Realiza análise de critérios + validação dos gráficos do relatório contra os padrões de avaliação (Tarefas 1-5):
+Realiza análise de critérios + validação dos gráficos do relatório contra os padrões de avaliação (Tarefas 1-6):
 
 ```bash
 # Usando Makefile (recomendado)
@@ -157,6 +175,22 @@ source .venv/bin/activate  # Linux/Mac
 python main.py --assessment-file cc_assessment_data.json --pdf-file cc_report.pdf
 ```
 
+#### Opção C: Análise de Gráfico PNG com Dados CSV (Novo!)
+
+Realiza análise de critérios + análise técnica de um gráfico PNG com dados CSV correspondentes (Tarefas 1-2, 7-9):
+
+```bash
+# Usando Makefile (recomendado)
+make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv
+
+# Ou com uv diretamente
+uv run python main.py --assessment-file cc_assessment_data.json --png-file plot.png --csv-file data.csv
+
+# Ou com o ambiente virtual ativado
+source .venv/bin/activate  # Linux/Mac
+python main.py --assessment-file cc_assessment_data.json --png-file plot.png --csv-file data.csv
+```
+
 **Exemplos práticos:**
 ```bash
 # Análise de critérios para Computação
@@ -168,11 +202,17 @@ make run assessment-file=./data/custom_assessment.json
 # Validação com relatório PDF do APOEMA
 make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf
 
+# Análise de gráfico PNG com dados CSV
+make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv
+
 # Com prefixo customizado
 make run assessment-file=cc_assessment_data.json prefix=computacao_2025
 
-# Análise completa com todos os parâmetros
+# Análise completa PDF com todos os parâmetros
 make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf prefix=analise_computacao
+
+# Análise completa PNG+CSV com todos os parâmetros
+make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv prefix=analise_plot
 ```
 
 **Saída esperada:**
@@ -206,18 +246,25 @@ crewai-test/
 ├── 📄 prompt_loader.py             # Carregador de prompts
 ├── 📄 assessment_data.json         # Dados de avaliação CAPES (entrada)
 │
-├── 📁 prompts/                     # Templates de prompts para agentes
+├── 📁 prompts/                          # Templates de prompts para agentes
 │   ├── agents/
-│   │   ├── data_reader.md          # Config do agente extrator de dados
-│   │   ├── summarizer.md           # Config do agente sumarizador
-│   │   └── report_analyzer.md      # Config do agente analisador de relatórios
+│   │   ├── data_reader.yaml               # Config do agente extrator de dados
+│   │   ├── summarizer.yaml                # Config do agente sumarizador
+│   │   ├── report_analyzer.yaml           # Config do agente analisador de relatórios
+│   │   ├── plot_data_analyst.yaml         # Config do agente analisador PNG+CSV
+│   │   ├── plot_insights_generator.yaml   # Config do agente gerador de insights
+│   │   └── utility_assessor.yaml          # Config do agente avaliador de utilidade
 │   │
 │   └── tasks/
-│       ├── task1_analyze.md        # Tarefa: Analisar critérios CAPES
-│       ├── task2_summarize.md      # Tarefa: Sumarizar critérios
-│       ├── task3_extract_plots.md  # Tarefa: Extrair visualizações
-│       ├── task4_analyze_plots.md  # Tarefa: Analisar gráficos
-│       └── task5_criteria_mapping.md # Tarefa: Mapear critérios
+│       ├── task1_analyze.yaml             # Tarefa: Analisar critérios CAPES
+│       ├── task2_summarize.yaml           # Tarefa: Sumarizar critérios
+│       ├── task3_extract_plots.yaml       # Tarefa: Extrair visualizações
+│       ├── task4_analyze_plots.yaml       # Tarefa: Analisar gráficos
+│       ├── task5_criteria_mapping.yaml    # Tarefa: Mapear critérios
+│       ├── task6_utility_assessment.yaml  # Tarefa: Avaliar utilidade
+│       ├── task7_plot_data_analysis.yaml  # Tarefa: Analisar PNG+CSV
+│       ├── task8_plot_insights.yaml       # Tarefa: Gerar insights
+│       └── task9_plot_utility_importance.yaml # Tarefa: Importância do plot
 │
 ├── 📁 output/                      # Resultados gerados
 │   └── output_*.md                 # Relatórios em Markdown
@@ -257,6 +304,30 @@ crewai-test/
 **O que faz:** Valida alinhamento dos gráficos com critérios CAPES  
 **Entrada:** Análises (Task 4) + Critérios (Task 1)  
 **Saída:** `conformance_report_*.md` com matriz de conformidade
+
+### Task 6: Avaliação de Utilidade dos Gráficos (Opcional)
+**Agente:** Utility Assessor  
+**O que faz:** Avalia a utilidade e relevância de cada gráfico para a área específica  
+**Entrada:** Análises (Task 4) + Critérios (Task 1) + Contexto (Task 5)  
+**Saída:** `utility_assessment_*.md` com scores de assertividade
+
+### Task 7: Análise Técnica de Gráfico PNG+CSV (Novo - Opcional)
+**Agente:** Plot Data Analyst  
+**O que faz:** Análise integrada de imagem PNG + dados CSV (tipo de gráfico, métricas estatísticas, tendências, outliers, qualidade de dados)  
+**Entrada:** PNG plot + CSV data + assessment_data.json  
+**Saída:** JSON estruturado com análise técnica completa
+
+### Task 8: Geração de Insights PNG+CSV (Novo - Opcional)
+**Agente:** Plot Insights Generator  
+**O que faz:** Transforma análise técnica em insights estratégicos e narrativa em Markdown  
+**Entrada:** JSON da Task 7 + assessment_data.json  
+**Saída:** `plot_insights_*.md` com insights, tendências, oportunidades e recomendações
+
+### Task 9: Avaliação de Importância do Gráfico (Novo - Opcional)
+**Agente:** Utility Assessor  
+**O que faz:** Avalia a importância e relevância do gráfico PNG para a área de avaliação  
+**Entrada:** Insights (Task 8) + assessment_data.json  
+**Saída:** `plot_importance_*.md` com score de importância e classificação
 
 ## 📊 Exemplo de Saída
 
@@ -432,13 +503,20 @@ Valida se o relatório do programa atende aos padrões CAPES.
 5. **Preserve histórico** - Não delete arquivos em `output/` (versionamento)
 6. **Teste incrementalmente** - Execute análise de critérios antes de adicionar PDFs
 
-## 📈 Próximas Melhorias
+## 📈 Melhorias Realizadas
 
-- [ ] Suporte a múltiplos tipos de arquivo (XLSX, CSV)
+- [x] **Análise PNG+CSV:** Suporte a análise de gráficos PNG com dados CSV (Tasks 7-9)
+- [x] **Dois agentes especializados:** Plot Data Analyst e Plot Insights Generator
+- [x] **Workflow alternativo:** PNG+CSV como alternativa ao PDF
+
+## 🔄 Próximas Melhorias
+
 - [ ] Dashboard web interativo
 - [ ] Comparação entre programas
 - [ ] Histórico de conformidade ao longo do tempo
 - [ ] Exportação para múltiplos formatos (PDF, Excel)
+- [ ] Suporte a múltiplos gráficos PNG em lote
+- [ ] Análise de gráficos interativos (HTML5)
 
 ## 📝 Licença
 

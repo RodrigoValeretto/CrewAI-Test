@@ -20,6 +20,18 @@ def parse_arguments():
         help="Path to the PDF report file (optional)",
     )
     parser.add_argument(
+        "--png-file",
+        type=str,
+        default=None,
+        help="Path to the PNG plot image file (optional, alternative to PDF)",
+    )
+    parser.add_argument(
+        "--csv-file",
+        type=str,
+        default=None,
+        help="Path to the CSV data file (optional, used with PNG)",
+    )
+    parser.add_argument(
         "--prefix",
         type=str,
         default=datetime.now().strftime("%Y%m%d%H%M%S"),
@@ -27,30 +39,42 @@ def parse_arguments():
     )
 
     args = parser.parse_args()
-    return args.assessment_file, args.pdf_file, args.prefix
+    return args.assessment_file, args.pdf_file, args.png_file, args.csv_file, args.prefix
 
 
 def main():
     """Main entry point."""
-    assessment_file, pdf_path, output_prefix = parse_arguments()
+    assessment_file, pdf_path, png_path, csv_path, output_prefix = parse_arguments()
 
-    # Display PDF information
-    if pdf_path and os.path.exists(pdf_path):
+    # Display input information and validate
+    has_pdf = pdf_path and os.path.exists(pdf_path)
+    has_png_csv = png_path and os.path.exists(png_path) and csv_path and os.path.exists(csv_path)
+    has_png_only = png_path and os.path.exists(png_path) and (not csv_path or not os.path.exists(csv_path))
+    has_csv_only = csv_path and os.path.exists(csv_path) and (not png_path or not os.path.exists(png_path))
+
+    if has_pdf:
         print(f"\n✓ Arquivo PDF carregado: {os.path.basename(pdf_path)}")
         print("✓ Tarefas de análise de relatório adicionadas ao pipeline\n")
+    elif has_png_csv:
+        print(f"\n✓ Imagem PNG carregada: {os.path.basename(png_path)}")
+        print(f"✓ Dados CSV carregados: {os.path.basename(csv_path)}")
+        print("✓ Tarefas de análise de gráfico PNG+CSV adicionadas ao pipeline\n")
     else:
-        if pdf_path:
+        if has_png_only:
+            print(f"⚠ Imagem PNG foi encontrada, mas arquivo CSV está faltando: {csv_path or 'não especificado'}")
+        if has_csv_only:
+            print(f"⚠ Dados CSV foram encontrados, mas arquivo PNG está faltando: {png_path or 'não especificado'}")
+        if pdf_path and not has_pdf:
             print(f"⚠ Arquivo PDF não encontrado: {pdf_path}")
-        print("\n💡 Dica: Execute com um arquivo PDF para análise de relatórios")
-        print("   Uso: python main.py --assessment-file <arquivo.json> --pdf-file <arquivo.pdf>")
-        print("   Uso (apenas assessment): python main.py --assessment-file <arquivo.json>")
-        print(
-            "   Uso (com prefixo customizado): python main.py --assessment-file <arquivo.json> --prefix my_run"
-        )
+        print("\n💡 Opções:")
+        print("   1. PDF: python main.py --assessment-file <arquivo.json> --pdf-file <arquivo.pdf>")
+        print("   2. PNG+CSV: python main.py --assessment-file <arquivo.json> --png-file <imagem.png> --csv-file <dados.csv>")
+        print("   3. Apenas assessment: python main.py --assessment-file <arquivo.json>")
+        print("   4. Com prefixo customizado: python main.py --assessment-file <arquivo.json> --prefix my_run")
         print("\nExecutando apenas tarefas 1 e 2...\n")
 
     # Run the APOEMA pipeline
-    result = run_apoema_pipeline(assessment_file, pdf_path, output_prefix)
+    result = run_apoema_pipeline(assessment_file, pdf_path, output_prefix, png_path, csv_path)
 
     print("\n" + "=" * 80)
     print("EXECUÇÃO CONCLUÍDA")
