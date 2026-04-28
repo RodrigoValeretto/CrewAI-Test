@@ -16,7 +16,7 @@ def get_llm():
         case "GEMINI":
             gemini_api_key = os.getenv("GEMINI_API_KEY")
             return LLM(
-                model="gemini/gemini-2.5-flash",
+                model="gemini/gemini-3-flash-preview",
                 api_key=gemini_api_key,
                 temperature=0.7,
             )
@@ -45,6 +45,7 @@ def create_agents(llm):
         backstory=data_reader_config["Backstory"],
         llm=llm,
         verbose=True,
+        multimodal=True,
     )
 
     summarizer_config = load_agent_prompt("summarizer")
@@ -63,6 +64,7 @@ def create_agents(llm):
         backstory=report_analyzer_config["Backstory"],
         llm=llm,
         verbose=True,
+        multimodal=True,
     )
 
     utility_assessor_config = load_agent_prompt("utility_assessor")
@@ -81,6 +83,7 @@ def create_agents(llm):
         backstory=plot_data_analyst_config["Backstory"],
         llm=llm,
         verbose=True,
+        multimodal=True,
     )
 
     plot_insights_generator_config = load_agent_prompt("plot_insights_generator")
