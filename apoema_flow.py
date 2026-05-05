@@ -17,94 +17,80 @@ class ApoemaFlow(Flow):
     - Basic assessment analysis (fallback)
     """
 
-    def __init__(self):
+    def __init__(
+        self,
+        assessment_file="assessment_data.json",
+        pdf_path=None,
+        png_path=None,
+        csv_path=None,
+        output_prefix="output",
+    ):
         super().__init__()
 
-    @start()
-    def setup_inputs(self):
-        """Initialize flow with input files, parameters, and agents/tasks."""
-        print("🚀 Starting APOEMA Flow...")
-        print(f"Flow State ID: {self.state['id']}")
-
-        # Initialize LLM and agents once
-        llm = get_llm()
-        agents = create_agents(llm)
-        self.state["llm"] = llm
-        self.state["agents"] = agents
-
         # Store input configuration in state
-        self.state["assessment_file"] = self.state.get(
-            "assessment_file", "assessment_data.json"
-        )
-        self.state["pdf_path"] = self.state.get("pdf_path", None)
-        self.state["png_path"] = self.state.get("png_path", None)
-        self.state["csv_path"] = self.state.get("csv_path", None)
-        self.state["output_prefix"] = self.state.get("output_prefix", "output")
+        self.state["assessment_file"] = assessment_file
+        self.state["pdf_path"] = pdf_path
+        self.state["png_path"] = png_path
+        self.state["csv_path"] = csv_path
+        self.state["output_prefix"] = output_prefix
 
         # Determine which workflow path to take
-        has_pdf = (
-            self.state["pdf_path"]
-            and os.path.exists(self.state["pdf_path"])
-        )
+        has_pdf = pdf_path and os.path.exists(pdf_path)
         has_png_csv = (
-            self.state["png_path"]
-            and os.path.exists(self.state["png_path"])
-            and self.state["csv_path"]
-            and os.path.exists(self.state["csv_path"])
+            png_path and os.path.exists(png_path) and csv_path and os.path.exists(csv_path)
         )
 
         self.state["workflow_type"] = "pdf" if has_pdf else ("png_csv" if has_png_csv else "basic")
 
+        # Initialize agents for use in setup_inputs
+        llm = get_llm()
+        agents = create_agents(llm)
+
         # Create tasks once based on the workflow type
         tasks = create_tasks(
-            self.state["pdf_path"],
-            self.state["output_prefix"],
+            pdf_path,
+            output_prefix,
             agents,
-            self.state["png_path"],
-            self.state["csv_path"],
+            png_path,
+            csv_path,
         )
         self.state["tasks"] = tasks
+        self.state["llm"] = llm
+        self.state["agents"] = agents
 
+    @start()
+    def load_input_files(self):
+        """Load input files and initialize flow."""
+        print("🚀 Starting APOEMA Flow...")
+        print(f"Flow State ID: {self.state['id']}")
         print(f"📋 Workflow type: {self.state['workflow_type']}")
-        print(f"📋 Total tasks available: {len(tasks)}")
-        return self.state["workflow_type"]
+        print(f"📋 Total tasks available: {len(self.state['tasks'])}")
 
-    @listen(setup_inputs)
-    def load_input_files(self, workflow_type):
-        """Load input files based on workflow type."""
         print("\n📂 Loading input files...")
 
-        self.input_files["assessment_data"] = TextFile(
-            source=self.state["assessment_file"]
-        )
+        input_files = {}
+        input_files["assessment_data"] = TextFile(source=self.state["assessment_file"])
 
-        if workflow_type == "pdf":
-            self.input_files["report_pdf"] = PDFFile(
-                source=self.state["pdf_path"]
-            )
+        if self.state["workflow_type"] == "pdf":
+            input_files["report_pdf"] = PDFFile(source=self.state["pdf_path"])
             print(f"✓ PDF loaded: {os.path.basename(self.state['pdf_path'])}")
-        elif workflow_type == "png_csv":
-            self.input_files["plot_image"] = ImageFile(
-                source=self.state["png_path"]
-            )
-            self.input_files["plot_data"] = TextFile(
-                source=self.state["csv_path"]
-            )
+        elif self.state["workflow_type"] == "png_csv":
+            input_files["plot_image"] = ImageFile(source=self.state["png_path"])
+            input_files["plot_data"] = TextFile(source=self.state["csv_path"])
             print(f"✓ PNG loaded: {os.path.basename(self.state['png_path'])}")
             print(f"✓ CSV loaded: {os.path.basename(self.state['csv_path'])}")
 
-        self.state["input_files"] = self.input_files
-        return self.input_files
+        self.state["input_files"] = input_files
 
     @listen(load_input_files)
-    def run_data_analysis(self, input_files):
+    def run_data_analysis(self):
         """Task 1: Run data analysis with the data reader agent."""
         print("\n🔍 Running data analysis...")
 
         tasks = self.state["tasks"]
         task1 = tasks[0]
 
-        result = task1.execute_sync(input_files=input_files)
+        result = task1.execute_sync(input_files=self.state["input_files"])
         self.state["data_analysis_result"] = result
         print(f"✓ Data analysis completed")
 
@@ -201,3 +187,28 @@ class ApoemaFlow(Flow):
             print(f"  • CSV file: {self.state['csv_path']}")
 
         return self.state
+
+
+def run_apoema_flow(assessment_file, pdf_path, output_prefix, png_path=None, csv_path=None):
+    """
+    Execute the APOEMA assessment analysis pipeline using Flow.
+
+    Args:
+        assessment_file: Path to the assessment data JSON file
+        pdf_path: Path to optional PDF file
+        output_prefix: Prefix for output files
+        png_path: Path to optional PNG plot image file
+        csv_path: Path to optional CSV data file
+
+    Returns:
+        result: The result from flow.kickoff()
+    """
+    flow = ApoemaFlow(
+        assessment_file=assessment_file,
+        pdf_path=pdf_path,
+        png_path=png_path,
+        csv_path=csv_path,
+        output_prefix=output_prefix,
+    )
+    result = flow.kickoff()
+    return result

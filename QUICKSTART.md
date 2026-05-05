@@ -45,6 +45,19 @@ set GEMINI_API_KEY=your-api-key-here
 
 APOEMA-CrewAI analyzes post-graduation programs against CAPES evaluation criteria by analyzing assessment documents and validating program reports in 2 or 3 stages:
 
+### Execution Modes
+
+APOEMA supports two execution modes:
+
+- **Flow Mode** (default): Modern event-driven workflow using CrewAI Flows for better state management and control flow
+- **Crew Mode**: Traditional sequential execution using CrewAI Crews
+
+```bash
+make run assessment-file=cc_assessment_data.json                    # Uses Flow mode (default)
+make run assessment-file=cc_assessment_data.json exec-mode=crew     # Uses Crew mode
+make run assessment-file=cc_assessment_data.json exec-mode=flow     # Explicitly use Flow mode
+```
+
 ### Stage 1: Assessment Analysis (Required)
 ```bash
 make run assessment-file=cc_assessment_data.json
@@ -89,17 +102,29 @@ make run assessment-file=cc_assessment_data.json prefix=cc_analysis
 
 ### Examples
 ```bash
-# Assessment analysis only
+# Assessment analysis only (Flow mode - default)
 make run assessment-file=cc_assessment_data.json
 
-# With PDF report validation
-make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf prefix=cc_analysis
+# Assessment analysis (Crew mode)
+make run assessment-file=cc_assessment_data.json exec-mode=crew
 
-# With PNG plot and CSV data analysis
-make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv prefix=plot_analysis
+# With PDF report validation (Flow mode)
+make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf
 
-# Full example with all parameters
+# With PDF report validation (Crew mode)
+make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf exec-mode=crew
+
+# With PNG plot and CSV data analysis (Flow mode)
+make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv
+
+# With PNG plot and CSV data analysis (Crew mode)
+make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv exec-mode=crew
+
+# Full example with custom prefix and Flow mode
 make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv prefix=my_analysis
+
+# Full example with custom prefix and Crew mode
+make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf prefix=cc_analysis exec-mode=crew
 ```
 
 ## 📖 Next Steps
