@@ -59,29 +59,18 @@ def parse_arguments():
 
 def main():
     """Main entry point."""
-    exec_mode, assessment_file, pdf_path, png_path, csv_path, output_prefix = (
-        parse_arguments()
-    )
+    exec_mode, assessment_file, pdf_path, png_path, csv_path, output_prefix = parse_arguments()
 
     print(f"\n🚀 APOEMA - Execution Mode: {exec_mode.upper()}")
 
     # Display input information and validate
     has_pdf = pdf_path and os.path.exists(pdf_path)
-    has_png_csv = (
-        png_path
-        and os.path.exists(png_path)
-        and csv_path
-        and os.path.exists(csv_path)
-    )
+    has_png_csv = png_path and os.path.exists(png_path) and csv_path and os.path.exists(csv_path)
     has_png_only = (
-        png_path
-        and os.path.exists(png_path)
-        and (not csv_path or not os.path.exists(csv_path))
+        png_path and os.path.exists(png_path) and (not csv_path or not os.path.exists(csv_path))
     )
     has_csv_only = (
-        csv_path
-        and os.path.exists(csv_path)
-        and (not png_path or not os.path.exists(png_path))
+        csv_path and os.path.exists(csv_path) and (not png_path or not os.path.exists(png_path))
     )
 
     if has_pdf:
@@ -103,9 +92,7 @@ def main():
         if pdf_path and not has_pdf:
             print(f"⚠ Arquivo PDF não encontrado: {pdf_path}")
         print("\n💡 Opções:")
-        print(
-            "   1. PDF: python main.py --assessment-file <arquivo.json> --pdf-file <arquivo.pdf>"
-        )
+        print("   1. PDF: python main.py --assessment-file <arquivo.json> --pdf-file <arquivo.pdf>")
         print(
             "   2. PNG+CSV: python main.py --assessment-file <arquivo.json> --png-file <imagem.png> --csv-file <dados.csv>"
         )
@@ -118,14 +105,10 @@ def main():
     # Execute based on selected mode
     if exec_mode == "crew":
         # Traditional Crew execution
-        result = run_apoema_pipeline(
-            assessment_file, pdf_path, output_prefix, png_path, csv_path
-        )
+        result = run_apoema_pipeline(assessment_file, pdf_path, output_prefix, png_path, csv_path)
     else:
         # Flow-based execution
-        result = run_apoema_flow(
-            assessment_file, pdf_path, output_prefix, png_path, csv_path
-        )
+        result = run_apoema_flow(assessment_file, pdf_path, output_prefix, png_path, csv_path)
 
     print("\n" + "=" * 80)
     print("EXECUÇÃO CONCLUÍDA")

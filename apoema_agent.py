@@ -84,8 +84,8 @@ def create_agents(llm):
     )
 
 
-def create_tasks(pdf_path, output_prefix, agents, png_path=None, csv_path=None):
-    """Create and return all tasks."""
+def create_tasks(output_prefix, agents, input_files):
+    """Create and return all tasks with their required input files."""
     (
         data_reader,
         summarizer,
@@ -101,6 +101,7 @@ def create_tasks(pdf_path, output_prefix, agents, png_path=None, csv_path=None):
         description=task1_config["description"],
         agent=data_reader,
         expected_output=task1_config["expected_output"],
+        input_files={"assessment_data": input_files.get("assessment_data")},
     )
 
     # Task 2: Summarization
@@ -112,18 +113,20 @@ def create_tasks(pdf_path, output_prefix, agents, png_path=None, csv_path=None):
         markdown=True,
         output_file=f"./output/{output_prefix}_output.md",
         context=[task1],
+        input_files={"assessment_data": input_files.get("assessment_data")},
     )
 
     tasks = [task1, task2]
 
-    # Optional Tasks 3-6: Report Analysis (requires PDF file)
-    if pdf_path and os.path.exists(pdf_path):
+    # Optional Tasks 3-6: Report Analysis (if PDF is available)
+    if input_files.get("report_pdf"):
         # Task 3: Extract plots from PDF
         task3_config = load_task_prompt("task3_extract_plots")
         task3 = Task(
             description=task3_config["description"],
             agent=report_analyzer,
             expected_output=task3_config["expected_output"],
+            input_files={"report_pdf": input_files.get("report_pdf")},
         )
 
         # Task 4: Analyze extracted plots
@@ -133,6 +136,7 @@ def create_tasks(pdf_path, output_prefix, agents, png_path=None, csv_path=None):
             agent=report_analyzer,
             expected_output=task4_config["expected_output"],
             context=[task3],
+            input_files={"report_pdf": input_files.get("report_pdf")},
         )
 
         # Task 5: Map visualizations to CAPES criteria
@@ -144,6 +148,10 @@ def create_tasks(pdf_path, output_prefix, agents, png_path=None, csv_path=None):
             markdown=True,
             output_file=f"./output/{output_prefix}_conformance_report.md",
             context=[task1, task3, task4],
+            input_files={
+                "assessment_data": input_files.get("assessment_data"),
+                "report_pdf": input_files.get("report_pdf"),
+            },
         )
 
         # Task 6: Assess utility and assertiveness of graphics
@@ -155,18 +163,23 @@ def create_tasks(pdf_path, output_prefix, agents, png_path=None, csv_path=None):
             markdown=True,
             output_file=f"./output/{output_prefix}_utility_assessment.md",
             context=[task4, task5],
+            input_files={"report_pdf": input_files.get("report_pdf")},
         )
 
         tasks.extend([task3, task4, task5, task6])
 
-    # Optional Tasks 7-9: PNG + CSV Plot Analysis (alternative to PDF)
-    elif png_path and os.path.exists(png_path) and csv_path and os.path.exists(csv_path):
+    # Optional Tasks 7-9: PNG + CSV Plot Analysis (if plot files are available)
+    elif input_files.get("plot_image") and input_files.get("plot_data"):
         # Task 7: Analyze PNG image and CSV data
         task7_config = load_task_prompt("task7_plot_data_analysis")
         task7 = Task(
             description=task7_config["description"],
             agent=plot_data_analyst,
             expected_output=task7_config["expected_output"],
+            input_files={
+                "plot_image": input_files.get("plot_image"),
+                "plot_data": input_files.get("plot_data"),
+            },
         )
 
         # Task 8: Generate insights and narrative from analysis
@@ -178,6 +191,11 @@ def create_tasks(pdf_path, output_prefix, agents, png_path=None, csv_path=None):
             markdown=True,
             output_file=f"./output/{output_prefix}_plot_insights.md",
             context=[task1, task2, task7],
+            input_files={
+                "assessment_data": input_files.get("assessment_data"),
+                "plot_image": input_files.get("plot_image"),
+                "plot_data": input_files.get("plot_data"),
+            },
         )
 
         # Task 9: Assess utility and importance of the plot
@@ -189,6 +207,11 @@ def create_tasks(pdf_path, output_prefix, agents, png_path=None, csv_path=None):
             markdown=True,
             output_file=f"./output/{output_prefix}_plot_importance.md",
             context=[task1, task2, task7, task8],
+            input_files={
+                "assessment_data": input_files.get("assessment_data"),
+                "plot_image": input_files.get("plot_image"),
+                "plot_data": input_files.get("plot_data"),
+            },
         )
 
         tasks.extend([task7, task8, task9])
@@ -212,6 +235,8 @@ def run_apoema_pipeline(assessment_file, pdf_path, output_prefix, png_path=None,
     """
     llm = get_llm()
     agents = create_agents(llm)
+
+    # Prepare input files based on workflow type
     input_files = {"assessment_data": TextFile(source=assessment_file)}
 
     # Determine which agents to use
@@ -225,15 +250,16 @@ def run_apoema_pipeline(assessment_file, pdf_path, output_prefix, png_path=None,
     ) = agents
     crew_agents = [data_reader, summarizer]
 
-    if pdf_path and os.path.exists(pdf_path):
+    if pdf_path:
         crew_agents.extend([report_analyzer, utility_assessor])
         input_files["report_pdf"] = PDFFile(source=pdf_path)
-    elif png_path and os.path.exists(png_path) and csv_path and os.path.exists(csv_path):
+    elif png_path and csv_path:
         crew_agents.extend([plot_data_analyst, plot_insights_generator, utility_assessor])
         input_files["plot_image"] = ImageFile(source=png_path)
         input_files["plot_data"] = TextFile(source=csv_path)
 
-    tasks = create_tasks(pdf_path, output_prefix, agents, png_path, csv_path)
+    # Create tasks with their required input files
+    tasks = create_tasks(output_prefix, agents, input_files=input_files)
 
     crew = Crew(
         agents=crew_agents,
@@ -241,5 +267,5 @@ def run_apoema_pipeline(assessment_file, pdf_path, output_prefix, png_path=None,
         process=Process.sequential,
     )
 
-    result = crew.kickoff(input_files=input_files)
+    result = crew.kickoff()
     return result

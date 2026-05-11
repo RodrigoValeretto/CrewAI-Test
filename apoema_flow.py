@@ -46,13 +46,19 @@ class ApoemaFlow(Flow):
         llm = get_llm()
         agents = create_agents(llm)
 
-        # Create tasks once based on the workflow type
+        # Prepare input files based on workflow type
+        input_files = {"assessment_data": TextFile(source=assessment_file)}
+        if self.state["workflow_type"] == "pdf":
+            input_files["report_pdf"] = PDFFile(source=pdf_path)
+        elif self.state["workflow_type"] == "png_csv":
+            input_files["plot_image"] = ImageFile(source=png_path)
+            input_files["plot_data"] = TextFile(source=csv_path)
+
+        # Create tasks once with their required input files
         tasks = create_tasks(
-            pdf_path,
             output_prefix,
             agents,
-            png_path,
-            csv_path,
+            input_files=input_files,
         )
         self.state["tasks"] = tasks
         self.state["llm"] = llm
@@ -66,22 +72,6 @@ class ApoemaFlow(Flow):
         print(f"📋 Workflow type: {self.state['workflow_type']}")
         print(f"📋 Total tasks available: {len(self.state['tasks'])}")
 
-        print("\n📂 Loading input files...")
-
-        input_files = {}
-        input_files["assessment_data"] = TextFile(source=self.state["assessment_file"])
-
-        if self.state["workflow_type"] == "pdf":
-            input_files["report_pdf"] = PDFFile(source=self.state["pdf_path"])
-            print(f"✓ PDF loaded: {os.path.basename(self.state['pdf_path'])}")
-        elif self.state["workflow_type"] == "png_csv":
-            input_files["plot_image"] = ImageFile(source=self.state["png_path"])
-            input_files["plot_data"] = TextFile(source=self.state["csv_path"])
-            print(f"✓ PNG loaded: {os.path.basename(self.state['png_path'])}")
-            print(f"✓ CSV loaded: {os.path.basename(self.state['csv_path'])}")
-
-        self.state["input_files"] = input_files
-
     @listen(load_input_files)
     def run_data_analysis(self):
         """Task 1: Run data analysis with the data reader agent."""
@@ -89,9 +79,6 @@ class ApoemaFlow(Flow):
 
         tasks = self.state["tasks"]
         task1 = tasks[0]
-
-        # Set input_files on the task
-        task1.input_files = self.state["input_files"]
 
         result = task1.execute_sync()
         self.state["data_analysis_result"] = result
@@ -108,8 +95,6 @@ class ApoemaFlow(Flow):
         task2 = tasks[1]
         task1 = tasks[0]
 
-        # Set input_files and context on the task
-        task2.input_files = self.state["input_files"]
         task2.context = [task1]
 
         result = task2.execute_sync()
@@ -136,7 +121,6 @@ class ApoemaFlow(Flow):
         results = {}
         for idx, task in enumerate(tasks[2:], start=3):
             print(f"  ├─ Executing Task {idx}...")
-            task.input_files = self.state["input_files"]
             result = task.execute_sync()
             results[f"task_{idx}"] = result
 
@@ -156,7 +140,6 @@ class ApoemaFlow(Flow):
         results = {}
         for idx, task in enumerate(tasks[2:], start=7):
             print(f"  ├─ Executing Task {idx}...")
-            task.input_files = self.state["input_files"]
             result = task.execute_sync()
             results[f"task_{idx}"] = result
 
@@ -213,5 +196,7 @@ def run_apoema_flow(assessment_file, pdf_path, output_prefix, png_path=None, csv
         csv_path=csv_path,
         output_prefix=output_prefix,
     )
+
+    flow.plot()
     result = flow.kickoff()
     return result
