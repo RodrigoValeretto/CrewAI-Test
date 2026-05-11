@@ -87,7 +87,7 @@ class ApoemaFlow(Flow):
         return result
 
     @listen(run_data_analysis)
-    def run_summarization(self, data_analysis_result):
+    def run_summarization(self):
         """Task 2: Run summarization with the summarizer agent."""
         print("\n📝 Running summarization...")
 
@@ -110,8 +110,8 @@ class ApoemaFlow(Flow):
         print(f"\n🔀 Routing workflow: {workflow_type}")
         return workflow_type
 
-    @listen(route_workflow)
-    def pdf(self):
+    @listen("pdf")
+    def pdf_workflow(self):
         """Task 3-6: Process PDF if available."""
         print("\n📄 Running PDF analysis...")
 
@@ -129,8 +129,8 @@ class ApoemaFlow(Flow):
 
         return results
 
-    @listen(route_workflow)
-    def png_csv(self):
+    @listen("png_csv")
+    def png_csv_workflow(self):
         """Task 7-9: Process PNG+CSV if available."""
         print("\n📊 Running PNG+CSV analysis...")
 
@@ -148,8 +148,8 @@ class ApoemaFlow(Flow):
 
         return results
 
-    @listen(route_workflow)
-    def basic(self):
+    @listen("basic")
+    def basic_workflow(self):
         """Basic workflow: only tasks 1 and 2."""
         print("\n📋 Running basic workflow (no additional analysis)")
         return None

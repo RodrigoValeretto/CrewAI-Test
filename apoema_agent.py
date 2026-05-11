@@ -23,7 +23,7 @@ def create_agents(llm):
         goal=data_reader_config["Goal"],
         backstory=data_reader_config["Backstory"],
         llm=llm,
-        verbose=True,
+        verbose=False,
         multimodal=True,
     )
 
@@ -33,7 +33,7 @@ def create_agents(llm):
         goal=summarizer_config["Goal"],
         backstory=summarizer_config["Backstory"],
         llm=llm,
-        verbose=True,
+        verbose=False,
     )
 
     report_analyzer_config = load_agent_prompt("report_analyzer")
@@ -42,7 +42,7 @@ def create_agents(llm):
         goal=report_analyzer_config["Goal"],
         backstory=report_analyzer_config["Backstory"],
         llm=llm,
-        verbose=True,
+        verbose=False,
         multimodal=True,
     )
 
@@ -52,7 +52,7 @@ def create_agents(llm):
         goal=utility_assessor_config["Goal"],
         backstory=utility_assessor_config["Backstory"],
         llm=llm,
-        verbose=True,
+        verbose=False,
     )
 
     plot_data_analyst_config = load_agent_prompt("plot_data_analyst")
@@ -61,7 +61,7 @@ def create_agents(llm):
         goal=plot_data_analyst_config["Goal"],
         backstory=plot_data_analyst_config["Backstory"],
         llm=llm,
-        verbose=True,
+        verbose=False,
         multimodal=True,
     )
 
@@ -71,7 +71,7 @@ def create_agents(llm):
         goal=plot_insights_generator_config["Goal"],
         backstory=plot_insights_generator_config["Backstory"],
         llm=llm,
-        verbose=True,
+        verbose=False,
     )
 
     return (
@@ -102,6 +102,7 @@ def create_tasks(output_prefix, agents, input_files):
         agent=data_reader,
         expected_output=task1_config["expected_output"],
         input_files={"assessment_data": input_files.get("assessment_data")},
+        verbose=False,
     )
 
     # Task 2: Summarization
@@ -114,6 +115,7 @@ def create_tasks(output_prefix, agents, input_files):
         output_file=f"./output/{output_prefix}_output.md",
         context=[task1],
         input_files={"assessment_data": input_files.get("assessment_data")},
+        verbose=False,
     )
 
     tasks = [task1, task2]
@@ -127,6 +129,7 @@ def create_tasks(output_prefix, agents, input_files):
             agent=report_analyzer,
             expected_output=task3_config["expected_output"],
             input_files={"report_pdf": input_files.get("report_pdf")},
+            verbose=False,
         )
 
         # Task 4: Analyze extracted plots
@@ -137,6 +140,7 @@ def create_tasks(output_prefix, agents, input_files):
             expected_output=task4_config["expected_output"],
             context=[task3],
             input_files={"report_pdf": input_files.get("report_pdf")},
+            verbose=False,
         )
 
         # Task 5: Map visualizations to CAPES criteria
@@ -152,6 +156,7 @@ def create_tasks(output_prefix, agents, input_files):
                 "assessment_data": input_files.get("assessment_data"),
                 "report_pdf": input_files.get("report_pdf"),
             },
+            verbose=False,
         )
 
         # Task 6: Assess utility and assertiveness of graphics
@@ -164,6 +169,7 @@ def create_tasks(output_prefix, agents, input_files):
             output_file=f"./output/{output_prefix}_utility_assessment.md",
             context=[task4, task5],
             input_files={"report_pdf": input_files.get("report_pdf")},
+            verbose=False,
         )
 
         tasks.extend([task3, task4, task5, task6])
@@ -180,6 +186,7 @@ def create_tasks(output_prefix, agents, input_files):
                 "plot_image": input_files.get("plot_image"),
                 "plot_data": input_files.get("plot_data"),
             },
+            verbose=False,
         )
 
         # Task 8: Generate insights and narrative from analysis
@@ -196,6 +203,7 @@ def create_tasks(output_prefix, agents, input_files):
                 "plot_image": input_files.get("plot_image"),
                 "plot_data": input_files.get("plot_data"),
             },
+            verbose=False,
         )
 
         # Task 9: Assess utility and importance of the plot
@@ -212,6 +220,7 @@ def create_tasks(output_prefix, agents, input_files):
                 "plot_image": input_files.get("plot_image"),
                 "plot_data": input_files.get("plot_data"),
             },
+            verbose=False,
         )
 
         tasks.extend([task7, task8, task9])
