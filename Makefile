@@ -10,6 +10,7 @@ help:
 	@echo "                                                 Run with PDF plot analysis"
 	@echo "  make run assessment-file=<path> png-file=<path> csv-file=<path>"
 	@echo "                                                 Run with PNG+CSV plot analysis"
+	@echo "  make run exec-mode=crew ...                    Run with Crew execution (default: flow)"
 	@echo "  make run prefix=<string>                       Specify custom prefix for output files"
 	@echo "  make help                                      Show this help message"
 	@echo "  make clean                                     Clean generated output and cache"
@@ -17,10 +18,12 @@ help:
 	@echo "Examples:"
 	@echo "  make install"
 	@echo "  make run assessment-file=cc_assessment_data.json"
+	@echo "  make run assessment-file=cc_assessment_data.json exec-mode=flow"
 	@echo "  make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf"
+	@echo "  make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf exec-mode=crew"
 	@echo "  make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv"
-	@echo "  make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf prefix=cc_analysis"
 	@echo "  make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv prefix=plot_analysis"
+	@echo "  make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv prefix=my_analysis exec-mode=flow"
 
 # Install dependencies using uv
 install:
@@ -31,6 +34,7 @@ install:
 # Run the main script with optional arguments
 run:
 	@uv run python main.py \
+		$(if $(exec-mode),--exec-mode $(exec-mode)) \
 		$(if $(assessment-file),--assessment-file $(assessment-file)) \
 		$(if $(pdf-file),--pdf-file $(pdf-file)) \
 		$(if $(png-file),--png-file $(png-file)) \

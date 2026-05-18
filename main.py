@@ -2,11 +2,19 @@ import os
 import argparse
 from datetime import datetime
 from apoema_agent import run_apoema_pipeline
+from apoema_flow import run_apoema_flow
 
 
 def parse_arguments():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description="Run APOEMA assessment analysis")
+    parser.add_argument(
+        "--exec-mode",
+        type=str,
+        choices=["crew", "flow"],
+        default="flow",
+        help="Execution mode: 'crew' for traditional Crew execution, 'flow' for Flow-based execution (default: flow)",
+    )
     parser.add_argument(
         "--assessment-file",
         type=str,
@@ -39,18 +47,31 @@ def parse_arguments():
     )
 
     args = parser.parse_args()
-    return args.assessment_file, args.pdf_file, args.png_file, args.csv_file, args.prefix
+    return (
+        args.exec_mode,
+        args.assessment_file,
+        args.pdf_file,
+        args.png_file,
+        args.csv_file,
+        args.prefix,
+    )
 
 
 def main():
     """Main entry point."""
-    assessment_file, pdf_path, png_path, csv_path, output_prefix = parse_arguments()
+    exec_mode, assessment_file, pdf_path, png_path, csv_path, output_prefix = parse_arguments()
+
+    print(f"\n🚀 APOEMA - Execution Mode: {exec_mode.upper()}")
 
     # Display input information and validate
     has_pdf = pdf_path and os.path.exists(pdf_path)
     has_png_csv = png_path and os.path.exists(png_path) and csv_path and os.path.exists(csv_path)
-    has_png_only = png_path and os.path.exists(png_path) and (not csv_path or not os.path.exists(csv_path))
-    has_csv_only = csv_path and os.path.exists(csv_path) and (not png_path or not os.path.exists(png_path))
+    has_png_only = (
+        png_path and os.path.exists(png_path) and (not csv_path or not os.path.exists(csv_path))
+    )
+    has_csv_only = (
+        csv_path and os.path.exists(csv_path) and (not png_path or not os.path.exists(png_path))
+    )
 
     if has_pdf:
         print(f"\n✓ Arquivo PDF carregado: {os.path.basename(pdf_path)}")
@@ -61,20 +82,33 @@ def main():
         print("✓ Tarefas de análise de gráfico PNG+CSV adicionadas ao pipeline\n")
     else:
         if has_png_only:
-            print(f"⚠ Imagem PNG foi encontrada, mas arquivo CSV está faltando: {csv_path or 'não especificado'}")
+            print(
+                f"⚠ Imagem PNG foi encontrada, mas arquivo CSV está faltando: {csv_path or 'não especificado'}"
+            )
         if has_csv_only:
-            print(f"⚠ Dados CSV foram encontrados, mas arquivo PNG está faltando: {png_path or 'não especificado'}")
+            print(
+                f"⚠ Dados CSV foram encontrados, mas arquivo PNG está faltando: {png_path or 'não especificado'}"
+            )
         if pdf_path and not has_pdf:
             print(f"⚠ Arquivo PDF não encontrado: {pdf_path}")
         print("\n💡 Opções:")
         print("   1. PDF: python main.py --assessment-file <arquivo.json> --pdf-file <arquivo.pdf>")
-        print("   2. PNG+CSV: python main.py --assessment-file <arquivo.json> --png-file <imagem.png> --csv-file <dados.csv>")
+        print(
+            "   2. PNG+CSV: python main.py --assessment-file <arquivo.json> --png-file <imagem.png> --csv-file <dados.csv>"
+        )
         print("   3. Apenas assessment: python main.py --assessment-file <arquivo.json>")
-        print("   4. Com prefixo customizado: python main.py --assessment-file <arquivo.json> --prefix my_run")
+        print(
+            "   4. Com prefixo customizado: python main.py --assessment-file <arquivo.json> --prefix my_run"
+        )
         print("\nExecutando apenas tarefas 1 e 2...\n")
 
-    # Run the APOEMA pipeline
-    result = run_apoema_pipeline(assessment_file, pdf_path, output_prefix, png_path, csv_path)
+    # Execute based on selected mode
+    if exec_mode == "crew":
+        # Traditional Crew execution
+        result = run_apoema_pipeline(assessment_file, pdf_path, output_prefix, png_path, csv_path)
+    else:
+        # Flow-based execution
+        result = run_apoema_flow(assessment_file, pdf_path, output_prefix, png_path, csv_path)
 
     print("\n" + "=" * 80)
     print("EXECUÇÃO CONCLUÍDA")
