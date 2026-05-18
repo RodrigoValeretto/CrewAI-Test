@@ -154,8 +154,8 @@ class ApoemaFlow(Flow):
         print("\n📋 Running basic workflow (no additional analysis)")
         return None
 
-    @listen(or_("pdf", "png_csv", "basic"))
-    def finalize_flow(self, *args):
+    @listen(or_("pdf_workflow", "png_csv_workflow", "basic_workflow"))
+    def finalize_flow(self):
         """Final step: Summarize flow results."""
         print("\n" + "=" * 80)
         print("✅ FLOW EXECUTION COMPLETED")
