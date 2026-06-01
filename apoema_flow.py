@@ -28,6 +28,7 @@ class ApoemaFlow(Flow):
         png_path=None,
         csv_path=None,
         output_prefix="output",
+        model="gemini",
     ):
         super().__init__()
 
@@ -37,6 +38,7 @@ class ApoemaFlow(Flow):
         self.state["png_path"] = png_path
         self.state["csv_path"] = csv_path
         self.state["output_prefix"] = output_prefix
+        self.state["model"] = model
 
         # Determine which workflow path to take
         has_pdf = pdf_path and os.path.exists(pdf_path)
@@ -47,7 +49,7 @@ class ApoemaFlow(Flow):
         self.state["workflow_type"] = "pdf" if has_pdf else ("png_csv" if has_png_csv else "basic")
 
         # Initialize agents for use in setup_inputs
-        llm = get_llm()
+        llm = get_llm(model=model)
         agents = create_agents(llm)
 
         # Prepare input files based on workflow type
@@ -177,7 +179,7 @@ class ApoemaFlow(Flow):
         return self.state
 
 
-async def run_apoema_flow(assessment_file, pdf_path, output_prefix, png_path=None, csv_path=None):
+async def run_apoema_flow(assessment_file, pdf_path, output_prefix, png_path=None, csv_path=None, model="gemini"):
     """
     Execute the APOEMA assessment analysis pipeline using Flow.
 
@@ -187,6 +189,7 @@ async def run_apoema_flow(assessment_file, pdf_path, output_prefix, png_path=Non
         output_prefix: Prefix for output files
         png_path: Path to optional PNG plot image file
         csv_path: Path to optional CSV data file
+        model: Model to use - 'gemini' or 'ollama' (default: 'gemini')
 
     Returns:
         result: The result from flow.kickoff()
@@ -197,12 +200,13 @@ async def run_apoema_flow(assessment_file, pdf_path, output_prefix, png_path=Non
         png_path=png_path,
         csv_path=csv_path,
         output_prefix=output_prefix,
+        model=model,
     )
 
     flow.plot()
-    streaming = await flow.kickoff_async()
+    streaming = flow.kickoff_async()
 
-    async for chunk in streaming:
+    async for chunk in await streaming:
         print("Processing....", end="\n", flush=True)
 
     return streaming.result

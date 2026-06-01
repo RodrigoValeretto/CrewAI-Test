@@ -17,6 +17,13 @@ def parse_arguments():
         help="Execution mode: 'crew' for traditional Crew execution, 'flow' for Flow-based execution (default: flow)",
     )
     parser.add_argument(
+        "--model",
+        type=str,
+        choices=["gemini", "ollama"],
+        default="gemini",
+        help="Model to use: 'gemini' for Google Gemini, 'ollama' for Ollama with Gemma3:4b (default: gemini)",
+    )
+    parser.add_argument(
         "--assessment-file",
         type=str,
         default="assessment_data.json",
@@ -50,6 +57,7 @@ def parse_arguments():
     args = parser.parse_args()
     return (
         args.exec_mode,
+        args.model,
         args.assessment_file,
         args.pdf_file,
         args.png_file,
@@ -60,9 +68,10 @@ def parse_arguments():
 
 def main():
     """Main entry point."""
-    exec_mode, assessment_file, pdf_path, png_path, csv_path, output_prefix = parse_arguments()
+    exec_mode, model, assessment_file, pdf_path, png_path, csv_path, output_prefix = parse_arguments()
 
     print(f"\n🚀 APOEMA - Execution Mode: {exec_mode.upper()}")
+    print(f"🤖 Model: {model.upper()}")
 
     # Display input information and validate
     has_pdf = pdf_path and os.path.exists(pdf_path)
@@ -93,24 +102,25 @@ def main():
         if pdf_path and not has_pdf:
             print(f"⚠ Arquivo PDF não encontrado: {pdf_path}")
         print("\n💡 Opções:")
-        print("   1. PDF: python main.py --assessment-file <arquivo.json> --pdf-file <arquivo.pdf>")
+        print("   1. PDF: python main.py --model gemini --assessment-file <arquivo.json> --pdf-file <arquivo.pdf>")
         print(
-            "   2. PNG+CSV: python main.py --assessment-file <arquivo.json> --png-file <imagem.png> --csv-file <dados.csv>"
+            "   2. PNG+CSV: python main.py --model gemini --assessment-file <arquivo.json> --png-file <imagem.png> --csv-file <dados.csv>"
         )
-        print("   3. Apenas assessment: python main.py --assessment-file <arquivo.json>")
+        print("   3. Apenas assessment: python main.py --model gemini --assessment-file <arquivo.json>")
         print(
-            "   4. Com prefixo customizado: python main.py --assessment-file <arquivo.json> --prefix my_run"
+            "   4. Com prefixo customizado: python main.py --model gemini --assessment-file <arquivo.json> --prefix my_run"
         )
+        print("   5. Com Ollama: python main.py --model ollama --assessment-file <arquivo.json>")
         print("\nExecutando apenas tarefas 1 e 2...\n")
 
     # Execute based on selected mode
     if exec_mode == "crew":
         # Traditional Crew execution
-        result = run_apoema_pipeline(assessment_file, pdf_path, output_prefix, png_path, csv_path)
+        result = run_apoema_pipeline(assessment_file, pdf_path, output_prefix, png_path, csv_path, model)
     else:
         # Flow-based execution
         result = asyncio.run(
-            run_apoema_flow(assessment_file, pdf_path, output_prefix, png_path, csv_path)
+            run_apoema_flow(assessment_file, pdf_path, output_prefix, png_path, csv_path, model)
         )
 
     print("\n" + "=" * 80)

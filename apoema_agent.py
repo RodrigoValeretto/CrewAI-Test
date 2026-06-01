@@ -5,14 +5,31 @@ from prompt_loader import load_agent_prompt, load_task_prompt
 
 
 # Initialize LLM configuration
-def get_llm():
-    """Create and return the LLM instance."""
-    gemini_api_key = os.getenv("GEMINI_API_KEY")
-    return LLM(
-        model="gemini/gemini-3-flash-preview",
-        api_key=gemini_api_key,
-        temperature=0.7,
-    )
+def get_llm(model: str = "gemini"):
+    """
+    Create and return the LLM instance.
+    
+    Args:
+        model: The model to use - 'gemini' or 'ollama' (default: 'gemini')
+               - 'gemini': Google Gemini 3.5 Flash Preview
+               - 'ollama': Ollama with Gemma3:4b (requires Ollama running on http://localhost:11434)
+    
+    Returns:
+        LLM: Configured LLM instance
+    """
+    if model == "ollama":
+        return LLM(
+            model="ollama/gemma3:4b",
+            base_url="http://localhost:11434",
+            temperature=0.7,
+        )
+    else:  # Default to gemini
+        gemini_api_key = os.getenv("GEMINI_API_KEY")
+        return LLM(
+            model="gemini/gemini-3-flash-preview",
+            api_key=gemini_api_key,
+            temperature=0.7,
+        )
 
 
 def create_agents(llm):
@@ -228,7 +245,9 @@ def create_tasks(output_prefix, agents, input_files):
     return tasks
 
 
-def run_apoema_pipeline(assessment_file, pdf_path, output_prefix, png_path=None, csv_path=None):
+def run_apoema_pipeline(
+    assessment_file, pdf_path, output_prefix, png_path=None, csv_path=None, model="gemini"
+):
     """
     Execute the APOEMA assessment analysis pipeline.
 
@@ -238,11 +257,12 @@ def run_apoema_pipeline(assessment_file, pdf_path, output_prefix, png_path=None,
         output_prefix: Prefix for output files
         png_path: Path to optional PNG plot image file
         csv_path: Path to optional CSV data file
+        model: Model to use - 'gemini' or 'ollama' (default: 'gemini')
 
     Returns:
         result: The result from crew.kickoff()
     """
-    llm = get_llm()
+    llm = get_llm(model=model)
     agents = create_agents(llm)
 
     # Prepare input files based on workflow type

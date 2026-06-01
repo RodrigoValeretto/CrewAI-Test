@@ -11,6 +11,7 @@ help:
 	@echo "  make run assessment-file=<path> png-file=<path> csv-file=<path>"
 	@echo "                                                 Run with PNG+CSV plot analysis"
 	@echo "  make run exec-mode=crew ...                    Run with Crew execution (default: flow)"
+	@echo "  make run model=<model>                         Specify model (e.g., gpt-5-mini or claude-haiku-4.5)"
 	@echo "  make run prefix=<string>                       Specify custom prefix for output files"
 	@echo "  make help                                      Show this help message"
 	@echo "  make clean                                     Clean generated output and cache"
@@ -19,8 +20,10 @@ help:
 	@echo "  make install"
 	@echo "  make run assessment-file=cc_assessment_data.json"
 	@echo "  make run assessment-file=cc_assessment_data.json exec-mode=flow"
+	@echo "  make run assessment-file=cc_assessment_data.json model=gpt-5-mini"
 	@echo "  make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf"
 	@echo "  make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf exec-mode=crew"
+	@echo "  make run assessment-file=cc_assessment_data.json pdf-file=cc_report.pdf model=claude-haiku-4.5"
 	@echo "  make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv"
 	@echo "  make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv prefix=plot_analysis"
 	@echo "  make run assessment-file=cc_assessment_data.json png-file=plot.png csv-file=data.csv prefix=my_analysis exec-mode=flow"
@@ -39,6 +42,7 @@ run:
 		$(if $(pdf-file),--pdf-file $(pdf-file)) \
 		$(if $(png-file),--png-file $(png-file)) \
 		$(if $(csv-file),--csv-file $(csv-file)) \
+		$(if $(model),--model $(model)) \
 		$(if $(prefix),--prefix $(prefix))
 
 # Clean generated files
