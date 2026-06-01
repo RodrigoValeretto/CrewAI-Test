@@ -1,4 +1,5 @@
 import os
+from typing import Literal
 from crewai.flow.flow import Flow, listen, start, router, or_
 from crewai_files import PDFFile, TextFile, ImageFile
 from apoema_agent import (
@@ -9,6 +10,9 @@ from apoema_agent import (
 
 
 class ApoemaFlow(Flow):
+    stream = True
+    verbose = False
+
     """
     Flow for coordinating APOEMA assessment analysis pipeline.
     Handles multiple analysis pathways:
@@ -65,15 +69,13 @@ class ApoemaFlow(Flow):
         self.state["agents"] = agents
 
     @start()
-    def load_input_files(self):
+    def run_data_analysis(self):
         """Load input files and initialize flow."""
         print("🚀 Starting APOEMA Flow...")
         print(f"Flow State ID: {self.state['id']}")
         print(f"📋 Workflow type: {self.state['workflow_type']}")
         print(f"📋 Total tasks available: {len(self.state['tasks'])}")
 
-    @listen(load_input_files)
-    def run_data_analysis(self):
         """Task 1: Run data analysis with the data reader agent."""
         print("\n🔍 Running data analysis...")
 
@@ -104,7 +106,7 @@ class ApoemaFlow(Flow):
         return result
 
     @router(run_summarization)
-    def route_workflow(self):
+    def route_workflow(self) -> Literal["pdf", "png_csv", "basic"]:
         """Router to determine the next workflow path based on workflow type."""
         workflow_type = self.state["workflow_type"]
         print(f"\n🔀 Routing workflow: {workflow_type}")
@@ -175,7 +177,7 @@ class ApoemaFlow(Flow):
         return self.state
 
 
-def run_apoema_flow(assessment_file, pdf_path, output_prefix, png_path=None, csv_path=None):
+async def run_apoema_flow(assessment_file, pdf_path, output_prefix, png_path=None, csv_path=None):
     """
     Execute the APOEMA assessment analysis pipeline using Flow.
 
@@ -198,5 +200,9 @@ def run_apoema_flow(assessment_file, pdf_path, output_prefix, png_path=None, csv
     )
 
     flow.plot()
-    result = flow.kickoff()
-    return result
+    streaming = await flow.kickoff_async()
+
+    async for chunk in streaming:
+        print("Processing....", end="\n", flush=True)
+
+    return streaming.result
